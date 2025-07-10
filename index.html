@@ -3,24 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEQR - مولد رموز QR متطور</title>
+    <title>MEQR - مولد و قارئ رمز الاستجابة السريعة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #4361ee;
             --secondary: #3a0ca3;
-            --accent: #4cc9f0;
-            --gradient-start: #7209b7;
-            --gradient-end: #3a0ca3;
-            --dark: #10002b;
-            --light: #f8f9fa;
+            --accent: #4895ef;
             --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
             --gray: #6c757d;
             --light-gray: #e9ecef;
-            --border-radius: 20px;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            --neon-shadow: 0 0 15px rgba(67, 97, 238, 0.7);
+            --border-radius: 16px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
         }
         
         * {
@@ -31,54 +29,49 @@
         }
         
         body {
-            background: linear-gradient(135deg, var(--dark), #240046);
-            color: var(--light);
+            background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+            color: var(--dark);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
             direction: rtl;
-            overflow-x: hidden;
         }
         
         .container {
             width: 100%;
             max-width: 450px;
-            background: rgba(25, 0, 51, 0.85);
+            background: white;
             border-radius: var(--border-radius);
             overflow: hidden;
-            box-shadow: var(--shadow), var(--neon-shadow);
-            height: 85vh;
+            box-shadow: var(--shadow);
+            height: 90vh;
             display: flex;
             flex-direction: column;
             position: relative;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(114, 9, 183, 0.3);
         }
         
         .app-header {
-            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            background: var(--gradient);
             color: white;
             padding: 25px 20px;
             text-align: center;
             position: relative;
-            border-bottom: 2px solid var(--accent);
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0 90%);
+            box-shadow: 0 4px 12px rgba(58, 12, 163, 0.2);
         }
         
         .app-header h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 800;
             margin-bottom: 5px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.5px;
         }
         
         .app-header p {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             opacity: 0.9;
-            max-width: 90%;
-            margin: 0 auto;
+            font-weight: 300;
         }
         
         .app-content {
@@ -86,69 +79,70 @@
             overflow-y: auto;
             padding: 20px;
             position: relative;
+            background: #fafbff;
         }
         
         .screen {
             display: none;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         .screen.active {
             display: block;
-            opacity: 1;
-            transform: translateY(0);
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .btn {
-            background: linear-gradient(to right, var(--primary), var(--gradient-start));
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 15px 20px;
-            border-radius: 50px;
+            padding: 14px 20px;
+            border-radius: 12px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             transition: all 0.3s ease;
             width: 100%;
-            margin: 12px 0;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
+            margin: 10px 0;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.25);
         }
         
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(114, 9, 183, 0.4);
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.35);
         }
         
         .btn-outline {
             background: transparent;
-            border: 2px solid var(--accent);
-            color: var(--accent);
+            border: 2px solid var(--primary);
+            color: var(--primary);
             box-shadow: none;
         }
         
         .btn-outline:hover {
-            background: rgba(76, 201, 240, 0.1);
+            background: rgba(67, 97, 238, 0.05);
+            transform: none;
         }
         
         .section-title {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             margin: 20px 0 15px;
-            color: var(--accent);
+            color: var(--secondary);
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 10px;
             position: relative;
-            padding-bottom: 8px;
+            padding-bottom: 10px;
         }
         
         .section-title::after {
@@ -158,7 +152,7 @@
             right: 0;
             width: 50px;
             height: 3px;
-            background: linear-gradient(to right, var(--accent), transparent);
+            background: var(--accent);
             border-radius: 3px;
         }
         
@@ -170,29 +164,31 @@
         }
         
         .qr-type {
-            background: rgba(58, 12, 163, 0.2);
+            background: var(--light);
             border-radius: var(--border-radius);
-            padding: 18px 10px;
+            padding: 15px 10px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 1px solid rgba(114, 9, 183, 0.3);
-            backdrop-filter: blur(5px);
-            position: relative;
-            overflow: hidden;
+            border: 1px solid var(--light-gray);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
         }
         
         .qr-type:hover {
             transform: translateY(-5px);
-            box-shadow: var(--shadow), var(--neon-shadow);
+            box-shadow: 0 8px 15px rgba(67, 97, 238, 0.15);
             border-color: var(--accent);
-            background: rgba(67, 97, 238, 0.25);
         }
         
         .qr-type i {
-            font-size: 1.8rem;
-            color: var(--accent);
-            margin-bottom: 12px;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .qr-type:hover i {
+            transform: scale(1.1);
         }
         
         .qr-type span {
@@ -201,10 +197,126 @@
             display: block;
         }
         
+        .tabs {
+            display: flex;
+            background: var(--light-gray);
+            border-radius: 12px;
+            padding: 5px;
+            margin: 20px 0;
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: #dbe4ff;
+            opacity: 0.7;
+        }
+        
+        .qr-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--light-gray);
+            transition: all 0.3s ease;
+        }
+        
+        .qr-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.1);
+        }
+        
+        .qr-item-title {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .qr-item-title i {
+            color: var(--primary);
+        }
+        
+        .qr-item-content {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding-right: 5px;
+        }
+        
+        .qr-item-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+        
+        .qr-item-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            background: var(--light-gray);
+            border: none;
+            color: var(--dark);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .action-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+        
         .qr-preview {
             text-align: center;
             margin: 20px 0;
-            transition: all 0.5s ease;
         }
         
         #qrcode {
@@ -214,143 +326,291 @@
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             margin: 20px auto;
-            border: 2px solid var(--accent);
+            border: 1px solid #e0e7ff;
         }
         
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--accent);
-        }
-        
-        .form-input {
+        .scanner-container {
+            position: relative;
             width: 100%;
-            padding: 14px 18px;
+            height: 300px;
+            background: var(--dark);
             border-radius: var(--border-radius);
-            border: 1px solid rgba(114, 9, 183, 0.5);
-            background: rgba(58, 12, 163, 0.15);
-            color: var(--light);
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
         }
         
-        .form-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
-            background: rgba(58, 12, 163, 0.25);
+        #scanner-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .scanner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .scanner-frame {
+            width: 220px;
+            height: 220px;
+            border: 3px solid var(--success);
+            border-radius: 12px;
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.6);
         }
         
         .bottom-nav {
             display: flex;
             justify-content: space-around;
-            background: rgba(25, 0, 51, 0.9);
-            border-top: 1px solid rgba(114, 9, 183, 0.3);
+            background: white;
+            border-top: 1px solid var(--light-gray);
             padding: 12px 0;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.03);
         }
         
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--gray);
             cursor: pointer;
             transition: all 0.3s ease;
-            padding: 6px 12px;
-            border-radius: 15px;
-            position: relative;
+            padding: 5px 15px;
+            border-radius: 10px;
         }
         
         .nav-item i {
             font-size: 1.3rem;
-            margin-bottom: 4px;
-            transition: all 0.3s ease;
+            margin-bottom: 3px;
+            transition: all 0.2s ease;
         }
         
         .nav-item.active {
-            color: var(--accent);
-            transform: translateY(-8px);
-        }
-        
-        .nav-item.active i {
-            color: var(--accent);
-            text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
-        }
-        
-        .nav-item::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            width: 0;
-            height: 3px;
-            background: var(--accent);
-            border-radius: 3px;
-            transition: width 0.3s ease;
-        }
-        
-        .nav-item.active::after {
-            width: 25px;
+            color: var(--primary);
+            background: rgba(67, 97, 238, 0.08);
         }
         
         .nav-item:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .settings-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .settings-link {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .settings-link i {
+            color: var(--gray);
+        }
+        
+        .divider {
+            height: 1px;
+            background: var(--light-gray);
+            margin: 20px 0;
+        }
+        
+        .create-input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--light-gray);
+            margin: 12px 0;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .create-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--light-gray);
+        }
+        
+        .form-section-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-section-title i {
             color: var(--accent);
         }
         
-        .action-buttons {
+        .form-row {
             display: flex;
-            gap: 12px;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+        
+        textarea.create-input {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload-btn {
+            background: var(--light-gray);
+            border: 1px dashed var(--gray);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-btn:hover {
+            background: #f0f4ff;
+            border-color: var(--primary);
+        }
+        
+        .file-upload-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .form-footer {
+            display: flex;
+            gap: 15px;
             margin-top: 20px;
         }
         
-        .action-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: var(--border-radius);
-            background: rgba(67, 97, 238, 0.2);
-            border: none;
-            color: var(--light);
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
+        .form-footer .btn {
+            margin: 0;
+        }
+        
+        .form-footer .btn-outline {
+            background: transparent;
+        }
+        
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            margin: 10px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(114, 9, 183, 0.3);
+            overflow: hidden;
+            border: 2px solid var(--light-gray);
         }
         
-        .action-btn:hover {
-            background: rgba(76, 201, 240, 0.3);
-            transform: translateY(-2px);
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
         }
         
-        .info-card {
-            background: rgba(58, 12, 163, 0.2);
-            border-radius: var(--border-radius);
-            padding: 15px;
-            margin: 20px 0;
-            border: 1px solid rgba(114, 9, 183, 0.3);
-            backdrop-filter: blur(5px);
-        }
-        
-        .info-card h3 {
-            color: var(--accent);
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-        
-        .info-card p {
-            font-size: 0.9rem;
-            line-height: 1.6;
+        .avatar-preview i {
+            font-size: 2rem;
+            color: var(--gray);
         }
         
         @media (max-width: 480px) {
@@ -363,8 +623,9 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
-            .app-header h1 {
-                font-size: 1.7rem;
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -373,75 +634,130 @@
     <div class="container">
         <div class="app-header">
             <h1>MEQR</h1>
-            <p>مولد رموز QR متطور لأنواع متعددة من البيانات</p>
+            <p>مولد و قارئ رمز الاستجابة السريعة</p>
         </div>
         
         <div class="app-content">
-            <!-- شاشة اختيار نوع QR -->
-            <div id="create-type-screen" class="screen active">
-                <h2 class="section-title"><i class="fas fa-qrcode"></i>إنشاء رمز استجابة سريعة</h2>
+            <!-- شاشة إنشاء رمز الاستجابة السريعة -->
+            <div id="create-qr-screen" class="screen active">
+                <h2 class="section-title"><i class="fas fa-qrcode"></i>إنشاء رمز الاستجابة السريعة الشخصي</h2>
+                <p>املأ التفاصيل الخاصة بك لإنشاء رمز QR شخصي</p>
                 
-                <div class="info-card">
-                    <h3><i class="fas fa-info-circle"></i> نبذة مختصرة</h3>
-                    <p>يمكنك إنشاء رموز QR متخصصة لأنواع مختلفة من البيانات، 
-                        بدءاً من المعلومات الشخصية وحتى حسابات التواصل الاجتماعي. 
-                        اختر النوع المناسب وأدخل البيانات لإنشاء رمز QR فوراً.</p>
-                </div>
-                
-                <div class="qr-types-grid">
-                    <div class="qr-type" onclick="showCreateScreen('اسم المستخدم')">
+                <div class="form-section">
+                    <h3 class="form-section-title"><i class="fas fa-user-circle"></i>المعلومات الأساسية</h3>
+                    
+                    <div class="avatar-preview">
                         <i class="fas fa-user"></i>
-                        <span>اسم المستخدم</span>
+                        <img id="avatar-img" src="" alt="صورة المستخدم">
                     </div>
-                    <div class="qr-type" onclick="showCreateScreen('رقم الهاتف')">
-                        <i class="fas fa-mobile-alt"></i>
-                        <span>رقم الهاتف</span>
+                    
+                    <div class="file-upload">
+                        <div class="file-upload-btn">
+                            <i class="fas fa-cloud-upload-alt"></i> رفع صورة شخصية
+                        </div>
+                        <input type="file" class="file-upload-input" id="avatar-upload" accept="image/*">
                     </div>
-                    <div class="qr-type" onclick="showCreateScreen('رقم الهاتف الثابت')">
-                        <i class="fas fa-phone-alt"></i>
-                        <span>رقم الهاتف الثابت</span>
+                    
+                    <div class="form-group">
+                        <label for="username">اسم المستخدم</label>
+                        <input type="text" class="create-input" id="username" placeholder="أدخل اسمك الكامل">
                     </div>
-                    <div class="qr-type" onclick="showCreateScreen('الايميل')">
-                        <i class="fas fa-envelope"></i>
-                        <span>الايميل</span>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">رقم الهاتف</label>
+                            <input type="tel" class="create-input" id="phone" placeholder="مثال: 0551234567">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="landline">رقم الهاتف الثابت</label>
+                            <input type="tel" class="create-input" id="landline" placeholder="مثال: 011234567">
+                        </div>
                     </div>
-                    <div class="qr-type" onclick="showCreateScreen('صورة')">
-                        <i class="fas fa-image"></i>
-                        <span>صورة</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('وثيقة')">
-                        <i class="fas fa-file-alt"></i>
-                        <span>وثيقة</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('الموقع الالكتروني')">
-                        <i class="fas fa-globe"></i>
-                        <span>الموقع الالكتروني</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('رقم الواتساب')">
-                        <i class="fab fa-whatsapp"></i>
-                        <span>رقم الواتساب</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('التلجرام')">
-                        <i class="fab fa-telegram"></i>
-                        <span>التلجرام</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('الانستقرام')">
-                        <i class="fab fa-instagram"></i>
-                        <span>الانستقرام</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('الفيسبوك')">
-                        <i class="fab fa-facebook"></i>
-                        <span>الفيسبوك</span>
+                    
+                    <div class="form-group">
+                        <label for="email">البريد الإلكتروني</label>
+                        <input type="email" class="create-input" id="email" placeholder="مثال: example@domain.com">
                     </div>
                 </div>
-            </div>
-            
-            <!-- شاشة إنشاء رمز استجابة سريعة -->
-            <div id="create-qr-screen" class="screen">
-                <h2 class="section-title" id="create-title"><i class="fas fa-qrcode"></i>إنشاء رمز استجابة سريعة</h2>
                 
-                <div id="form-container">
-                    <!-- سيتم عرض حقول الإدخال المناسبة هنا -->
+                <div class="form-section">
+                    <h3 class="form-section-title"><i class="fas fa-hashtag"></i>مواقع التواصل الاجتماعي</h3>
+                    
+                    <div class="form-group">
+                        <label for="whatsapp"><i class="fab fa-whatsapp" style="color: #25D366;"></i> رقم واتساب</label>
+                        <input type="tel" class="create-input" id="whatsapp" placeholder="أدخل رقم واتساب">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telegram"><i class="fab fa-telegram" style="color: #0088cc;"></i> تليجرام</label>
+                        <input type="text" class="create-input" id="telegram" placeholder="اسم المستخدم في تليجرام">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="facebook"><i class="fab fa-facebook" style="color: #1877F2;"></i> فيسبوك</label>
+                            <input type="text" class="create-input" id="facebook" placeholder="رابط أو اسم المستخدم">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="instagram"><i class="fab fa-instagram" style="color: #E1306C;"></i> انستقرام</label>
+                            <input type="text" class="create-input" id="instagram" placeholder="اسم المستخدم في انستقرام">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="form-section-title"><i class="fas fa-file-alt"></i>معلومات أخرى</h3>
+                    
+                    <div class="form-group">
+                        <label for="voice"><i class="fas fa-microphone-alt"></i> تسجيل صوتي</label>
+                        <div class="file-upload">
+                            <div class="file-upload-btn">
+                                <i class="fas fa-file-audio"></i> رفع ملف صوتي
+                            </div>
+                            <input type="file" class="file-upload-input" id="voice-upload" accept="audio/*">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="image"><i class="fas fa-image"></i> صورة</label>
+                        <div class="file-upload">
+                            <div class="file-upload-btn">
+                                <i class="fas fa-file-image"></i> رفع صورة
+                            </div>
+                            <input type="file" class="file-upload-input" id="image-upload" accept="image/*">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="document"><i class="fas fa-file-pdf"></i> وثيقة</label>
+                        <div class="file-upload">
+                            <div class="file-upload-btn">
+                                <i class="fas fa-file-pdf"></i> رفع ملف (PDF, DOC)
+                            </div>
+                            <input type="file" class="file-upload-input" id="document-upload" accept=".pdf,.doc,.docx">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="form-section-title"><i class="fas fa-edit"></i>نبذة مختصرة عنك</h3>
+                    
+                    <div class="form-group">
+                        <label for="bio">اكتب نبذة مختصرة عن نفسك</label>
+                        <textarea class="create-input" id="bio" placeholder="أخبرنا عن نفسك، اهتماماتك، خبراتك..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-footer">
+                    <button class="btn" onclick="generatePersonalQR()">
+                        <i class="fas fa-bolt"></i> إنشاء رمز الاستجابة السريعة
+                    </button>
+                    
+                    <button class="btn btn-outline" onclick="resetForm()">
+                        <i class="fas fa-redo"></i> إعادة تعيين
+                    </button>
                 </div>
                 
                 <div class="qr-preview" id="qr-preview-container">
@@ -449,104 +765,29 @@
                 </div>
                 
                 <div id="qr-result" style="display: none;">
-                    <div class="action-buttons">
-                        <button class="action-btn" onclick="downloadQR()">
-                            <i class="fas fa-download"></i> تحميل
-                        </button>
-                        
-                        <button class="action-btn" onclick="saveQR()">
-                            <i class="fas fa-save"></i> حفظ
-                        </button>
-                        
-                        <button class="action-btn" onclick="showScreen('create-type-screen')">
-                            <i class="fas fa-plus"></i> جديد
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- شاشة رموز الاستجابة السريعة الخاصة بي -->
-            <div id="myqrs-screen" class="screen">
-                <h2 class="section-title"><i class="fas fa-qrcode"></i>رموزي المحفوظة</h2>
-                
-                <div class="qr-item">
-                    <div class="qr-item-title">حسابي على الإنستجرام</div>
-                    <div class="qr-item-content">@my_instagram</div>
-                    <div class="qr-item-meta">
-                        <span>النوع: انستجرام</span>
-                        <span>تم الإنشاء: 12.08.25</span>
-                    </div>
-                </div>
-                
-                <div class="qr-item">
-                    <div class="qr-item-title">موقعي الشخصي</div>
-                    <div class="qr-item-content">https://mywebsite.com</div>
-                    <div class="qr-item-meta">
-                        <span>النوع: موقع الكتروني</span>
-                        <span>تم الإنشاء: 05.08.25</span>
-                    </div>
-                </div>
-                
-                <div class="qr-item">
-                    <div class="qr-item-title">رقم الواتساب</div>
-                    <div class="qr-item-content">+966500000000</div>
-                    <div class="qr-item-meta">
-                        <span>النوع: واتساب</span>
-                        <span>تم الإنشاء: 01.08.25</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- شاشة الإعدادات -->
-            <div id="settings-screen" class="screen">
-                <h2 class="section-title"><i class="fas fa-cog"></i>الإعدادات</h2>
-                
-                <div class="settings-option">
-                    <div class="settings-label">
-                        <i class="fas fa-vibrate"></i>
-                        <span>الاهتزاز عند المسح</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                
-                <div class="settings-option">
-                    <div class="settings-label">
-                        <i class="fas fa-globe"></i>
-                        <span>فتح المواقع تلقائيًا</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                
-                <div class="divider"></div>
-                
-                <div class="settings-link">
-                    <div class="settings-label">
-                        <i class="fas fa-question-circle"></i>
-                        <span>المساعدة</span>
-                    </div>
-                    <i class="fas fa-chevron-left"></i>
-                </div>
-                
-                <div class="settings-link">
-                    <div class="settings-label">
-                        <i class="fas fa-comment-alt"></i>
-                        <span>أرسل لنا تعليقاتك</span>
-                    </div>
-                    <i class="fas fa-chevron-left"></i>
+                    <button class="btn" onclick="downloadQR()">
+                        <i class="fas fa-download"></i> تحميل رمز الاستجابة السريعة
+                    </button>
+                    
+                    <button class="btn btn-outline" onclick="saveQR()">
+                        <i class="fas fa-save"></i> حفظ في رموزي
+                    </button>
                 </div>
             </div>
         </div>
         
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="showScreen('create-type-screen')">
+            <div class="nav-item active" onclick="showScreen('create-qr-screen')">
                 <i class="fas fa-plus-circle"></i>
                 <span>إنشاء QR</span>
+            </div>
+            <div class="nav-item" onclick="showScreen('history-screen')">
+                <i class="fas fa-history"></i>
+                <span>السجل</span>
+            </div>
+            <div class="nav-item" onclick="showScreen('scan-screen')">
+                <i class="fas fa-camera"></i>
+                <span>مسح</span>
             </div>
             <div class="nav-item" onclick="showScreen('myqrs-screen')">
                 <i class="fas fa-qrcode"></i>
@@ -578,249 +819,72 @@
             // تحديث العنصر النشط في التنقل السفلي
             if(screenId === 'create-type-screen' || screenId === 'create-qr-screen') {
                 document.querySelectorAll('.nav-item')[0].classList.add('active');
-            } else if(screenId === 'myqrs-screen') {
+            } else if(screenId === 'history-screen') {
                 document.querySelectorAll('.nav-item')[1].classList.add('active');
-            } else if(screenId === 'settings-screen') {
+            } else if(screenId === 'scan-screen') {
                 document.querySelectorAll('.nav-item')[2].classList.add('active');
+            } else if(screenId === 'myqrs-screen') {
+                document.querySelectorAll('.nav-item')[3].classList.add('active');
+            } else if(screenId === 'settings-screen') {
+                document.querySelectorAll('.nav-item')[4].classList.add('active');
             }
         }
         
-        // الانتقال إلى شاشة إنشاء رمز الاستجابة السريعة مع تحديد النوع
-        function showCreateScreen(type) {
-            document.getElementById('create-title').innerHTML = 
-                `<i class="fas fa-qrcode"></i>إنشاء رمز استجابة سريعة: ${type}`;
-            
-            // إخفاء معاينة QR إن وجدت
-            document.getElementById('qr-preview-container').innerHTML = '';
-            document.getElementById('qr-result').style.display = 'none';
-            
-            // إنشاء حقول الإدخال المناسبة حسب النوع
-            const formContainer = document.getElementById('form-container');
-            formContainer.innerHTML = '';
-            
-            // تحديد الحقول المطلوبة لكل نوع
-            switch(type) {
-                case 'اسم المستخدم':
-                    formContainer.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label">اسم المستخدم</label>
-                            <input type="text" class="form-input" id="username-input" placeholder="أدخل اسم المستخدم">
-                        </div>
-                    `;
-                    break;
-                    
-                case 'رقم الهاتف':
-                    formContainer.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label">رقم الهاتف المحمول</label>
-                            <input type="tel" class="form-input" id="mobile-input" placeholder="أدخل رقم الهاتف المحمول">
-                        </div>
-                    `;
-                    break;
-                    
-                case 'رقم الهاتف الثابت':
-                    formContainer.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label">رقم الهاتف الثابت</label>
-                            <input type="tel" class="form-input" id="phone-input" placeholder="أدخل رقم الهاتف الثابت">
-                        </div>
-                    `;
-                    break;
-                    
-                case 'الايميل':
-                    formContainer.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label">البريد الإلكتروني</label>
-                            <input type="email" class="form-input" id="email-input" placeholder="أدخل البريد الإلكتروني">
-                        </div>
-                    `;
-                    break;
-                    
-                case 'صورة':
-                    formContainer.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label">رابط الصورة</label>
-                            <input type="url" class="form-input" id="image-url-input" placeholder="أدخل رابط الصورة">
-                        </div>
-                        <div class="info-card">
-                            <h3><i class="fas fa-info-circle"></i> ملاحظة</h3>
-                            <p>يمكنك إدخال رابط صورة من أي موقع، أو رفع صورة من جهازك لتحويلها إلى رمز QR.</p>
-                        </div>
-                    `;
-                    break;
-                    
-                case 'وثيقة':
-                    formContainer.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label">رابط الوثيقة</label>
-                            <input type="url" class="form-input" id="document-url-input" placeholder="أدخل رابط الوثيقة">
-                        </div>
-                        <div class="info-card">
-                            <h3><i class="fas fa-info-circle"></i> ملاحظة</h3>
-                            <p>يمكنك إدخال رابط وثيقة (PDF, DOC, etc) من أي موقع، أو رفع وثيقة من جهازك لتحويلها إلى رمز QR.</p>
-                        </div>
-                    `;
-                    break;
-                    
-                case 'الموقع الالكتروني':
-                    formContainer.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label">رابط الموقع</label>
-                            <input type="url" class="form-input" id="website-input" placeholder="أدخل رابط الموقع">
-                        </div>
-                    `;
-                    break;
-                    
-                case 'رقم الواتساب':
-                    formContainer.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label">رقم الواتساب</label>
-                            <input type="tel" class="form-input" id="whatsapp-input" placeholder="أدخل رقم الواتساب">
-                        </div>
-                    `;
-                    break;
-                    
-                case 'التلجرام':
-                    formContainer.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label">اسم مستخدم التلجرام</label>
-                            <input type="text" class="form-input" id="telegram-input" placeholder="أدخل اسم المستخدم">
-                        </div>
-                    `;
-                    break;
-                    
-                case 'الانستقرام':
-                    formContainer.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label">اسم مستخدم الانستقرام</label>
-                            <input type="text" class="form-input" id="instagram-input" placeholder="أدخل اسم المستخدم">
-                        </div>
-                    `;
-                    break;
-                    
-                case 'الفيسبوك':
-                    formContainer.innerHTML = `
-                        <div class="form-group">
-                            <label class="form-label">رابط الفيسبوك</label>
-                            <input type="url" class="form-input" id="facebook-input" placeholder="أدخل رابط الفيسبوك">
-                        </div>
-                    `;
-                    break;
+        // معالجة رفع الصورة الشخصية
+        document.getElementById('avatar-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const avatarImg = document.getElementById('avatar-img');
+                    avatarImg.src = event.target.result;
+                    avatarImg.style.display = 'block';
+                    document.querySelector('.avatar-preview i').style.display = 'none';
+                }
+                reader.readAsDataURL(file);
             }
-            
-            // إضافة زر الإنشاء
-            formContainer.innerHTML += `
-                <button class="btn" onclick="generateQR('${type}')">
-                    <i class="fas fa-bolt"></i> إنشاء رمز الاستجابة السريعة
-                </button>
-            `;
-            
-            showScreen('create-qr-screen');
-        }
+        });
         
-        // إنشاء رمز الاستجابة السريعة
-        function generateQR(type) {
-            let data = '';
-            let error = false;
+        // إنشاء رمز الاستجابة السريعة الشخصي
+        function generatePersonalQR() {
+            // جمع البيانات من النموذج
+            const userData = {
+                username: document.getElementById('username').value,
+                phone: document.getElementById('phone').value,
+                landline: document.getElementById('landline').value,
+                email: document.getElementById('email').value,
+                whatsapp: document.getElementById('whatsapp').value,
+                telegram: document.getElementById('telegram').value,
+                facebook: document.getElementById('facebook').value,
+                instagram: document.getElementById('instagram').value,
+                bio: document.getElementById('bio').value
+            };
             
-            // جمع البيانات حسب النوع
-            switch(type) {
-                case 'اسم المستخدم':
-                    data = document.getElementById('username-input').value;
-                    if (!data) {
-                        alert('الرجاء إدخال اسم المستخدم');
-                        error = true;
-                    }
-                    break;
-                    
-                case 'رقم الهاتف':
-                    data = 'tel:' + document.getElementById('mobile-input').value;
-                    if (!document.getElementById('mobile-input').value) {
-                        alert('الرجاء إدخال رقم الهاتف');
-                        error = true;
-                    }
-                    break;
-                    
-                case 'رقم الهاتف الثابت':
-                    data = 'tel:' + document.getElementById('phone-input').value;
-                    if (!document.getElementById('phone-input').value) {
-                        alert('الرجاء إدخال رقم الهاتف الثابت');
-                        error = true;
-                    }
-                    break;
-                    
-                case 'الايميل':
-                    data = 'mailto:' + document.getElementById('email-input').value;
-                    if (!document.getElementById('email-input').value) {
-                        alert('الرجاء إدخال البريد الإلكتروني');
-                        error = true;
-                    }
-                    break;
-                    
-                case 'صورة':
-                    data = document.getElementById('image-url-input').value;
-                    if (!data) {
-                        alert('الرجاء إدخال رابط الصورة');
-                        error = true;
-                    }
-                    break;
-                    
-                case 'وثيقة':
-                    data = document.getElementById('document-url-input').value;
-                    if (!data) {
-                        alert('الرجاء إدخال رابط الوثيقة');
-                        error = true;
-                    }
-                    break;
-                    
-                case 'الموقع الالكتروني':
-                    data = document.getElementById('website-input').value;
-                    if (!data) {
-                        alert('الرجاء إدخال رابط الموقع');
-                        error = true;
-                    }
-                    break;
-                    
-                case 'رقم الواتساب':
-                    data = 'https://wa.me/' + document.getElementById('whatsapp-input').value;
-                    if (!document.getElementById('whatsapp-input').value) {
-                        alert('الرجاء إدخال رقم الواتساب');
-                        error = true;
-                    }
-                    break;
-                    
-                case 'التلجرام':
-                    data = 'https://t.me/' + document.getElementById('telegram-input').value;
-                    if (!document.getElementById('telegram-input').value) {
-                        alert('الرجاء إدخال اسم مستخدم التلجرام');
-                        error = true;
-                    }
-                    break;
-                    
-                case 'الانستقرام':
-                    data = 'https://instagram.com/' + document.getElementById('instagram-input').value;
-                    if (!document.getElementById('instagram-input').value) {
-                        alert('الرجاء إدخال اسم مستخدم الانستقرام');
-                        error = true;
-                    }
-                    break;
-                    
-                case 'الفيسبوك':
-                    data = document.getElementById('facebook-input').value;
-                    if (!data) {
-                        alert('الرجاء إدخال رابط الفيسبوك');
-                        error = true;
-                    }
-                    break;
+            // التحقق من إدخال البيانات الأساسية
+            if (!userData.username || !userData.phone) {
+                alert('الرجاء إدخال اسم المستخدم ورقم الهاتف على الأقل');
+                return;
             }
             
-            if (error) return;
+            // إنشاء نص vCard
+            let vCardData = "BEGIN:VCARD\n";
+            vCardData += "VERSION:3.0\n";
+            vCardData += `FN:${userData.username}\n`;
+            vCardData += `TEL;TYPE=CELL:${userData.phone}\n`;
+            if (userData.landline) vCardData += `TEL;TYPE=WORK,VOICE:${userData.landline}\n`;
+            if (userData.email) vCardData += `EMAIL:${userData.email}\n`;
+            if (userData.whatsapp) vCardData += `URL;TYPE=whatsapp:https://wa.me/${userData.whatsapp}\n`;
+            if (userData.telegram) vCardData += `URL;TYPE=telegram:https://t.me/${userData.telegram}\n`;
+            if (userData.facebook) vCardData += `URL;TYPE=facebook:${userData.facebook}\n`;
+            if (userData.instagram) vCardData += `URL;TYPE=instagram:https://instagram.com/${userData.instagram}\n`;
+            if (userData.bio) vCardData += `NOTE:${userData.bio}\n`;
+            vCardData += "END:VCARD";
             
             // إنشاء رمز الاستجابة السريعة
             const container = document.getElementById('qr-preview-container');
             container.innerHTML = '';
             new QRCode(container, {
-                text: data,
+                text: vCardData,
                 width: 200,
                 height: 200,
                 colorDark: "#000000",
@@ -831,13 +895,8 @@
             // إظهار خيارات النتيجة
             document.getElementById('qr-result').style.display = 'block';
             
-            // إضافة رسالة نجاح
-            container.insertAdjacentHTML('beforebegin', `
-                <div class="info-card" style="background: rgba(76, 201, 240, 0.1); border-color: var(--accent);">
-                    <h3><i class="fas fa-check-circle"></i> تم إنشاء رمز QR بنجاح!</h3>
-                    <p>يمكنك الآن تحميل الرمز أو حفظه للرجوع إليه لاحقاً.</p>
-                </div>
-            `);
+            // التمرير لأسفل لرؤية النتيجة
+            container.scrollIntoView({behavior: 'smooth'});
         }
         
         // تحميل رمز الاستجابة السريعة
@@ -849,7 +908,7 @@
             }
             
             const link = document.createElement('a');
-            link.download = 'meqr-qrcode.png';
+            link.download = 'meqr-personal-qrcode.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         }
@@ -857,13 +916,30 @@
         // حفظ رمز الاستجابة السريعة
         function saveQR() {
             alert('تم حفظ رمز الاستجابة السريعة في "رموزي" بنجاح!');
-            showScreen('myqrs-screen');
         }
         
-        // عند التحميل، إظهار الشاشة الرئيسية
-        document.addEventListener('DOMContentLoaded', function() {
-            showScreen('create-type-screen');
-        });
+        // إعادة تعيين النموذج
+        function resetForm() {
+            document.getElementById('username').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('landline').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('whatsapp').value = '';
+            document.getElementById('telegram').value = '';
+            document.getElementById('facebook').value = '';
+            document.getElementById('instagram').value = '';
+            document.getElementById('bio').value = '';
+            document.getElementById('qr-preview-container').innerHTML = '';
+            document.getElementById('qr-result').style.display = 'none';
+            
+            // إعادة تعيين الصورة الشخصية
+            document.getElementById('avatar-img').src = '';
+            document.getElementById('avatar-img').style.display = 'none';
+            document.querySelector('.avatar-preview i').style.display = 'block';
+            document.getElementById('avatar-upload').value = '';
+            
+            alert('تم إعادة تعيين النموذج بنجاح');
+        }
     </script>
 </body>
 </html>
