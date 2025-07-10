@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEQR - مولد و قارئ رمز الاستجابة السريعة</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- شاشة التحميل/الترحيب -->
+        <div id="welcome-screen" class="screen active">
+            <h1>مرحبًا!</h1>
+            <p>أنشئ رموز QR ديناميكية مجانًا بلمسات قليلة!</p>
+            <div class="menu">
+                <button onclick="showScreen('scan-screen')">مسح رمز الاستجابة السريعة →</button>
+                <button onclick="showScreen('history-screen')">سجل المسح →</button>
+                <button onclick="showScreen('create-type-screen')">إنشاء رمز استجابة سريعة →</button>
+                <button onclick="showScreen('myqrs-screen')">رموز الاستجابة السريعة الخاصة بي →</button>
+            </div>
+        </div>
+
+        <!-- شاشة إنشاء رمز الاستجابة السريعة: اختيار النوع -->
+        <div id="create-type-screen" class="screen">
+            <h1>MEQR</h1>
+            <h2>اختر النوع</h2>
+            <p>كيف يعمل؟</p>
+            <h3>جميع أنواع رموز QR</h3>
+            <div class="qr-types">
+                <button onclick="startCreatingQR('url')">رابط / URL</button>
+                <button onclick="startCreatingQR('pdf')">PDF</button>
+                <button onclick="startCreatingQR('image')">صورة</button>
+                <button onclick="startCreatingQR('appstore')">متجر Play / App Store</button>
+                <button onclick="startCreatingQR('text')">نص</button>
+                <button onclick="startCreatingQR('map')">خريطة</button>
+                <button onclick="startCreatingQR('wifi')">Wi-Fi</button>
+                <button onclick="startCreatingQR('audio')">صوت</button>
+                <!-- المزيد من الأنواع من لقطة أخرى -->
+                <button onclick="startCreatingQR('whatsapp')">WhatsApp</button>
+                <button onclick="startCreatingQR('vcard')">vCard</button>
+                <button onclick="startCreatingQR('booking')">حجز</button>
+                <button onclick="startCreatingQR('pptx')">PPTX</button>
+                <button onclick="startCreatingQR('custom-url')">رابط مخصص</button>
+            </div>
+            <div class="bottom-nav">
+                <button onclick="showScreen('create-type-screen')">إنشاء QR</button>
+                <button onclick="showScreen('history-screen')">السجل</button>
+                <button onclick="showScreen('scan-screen')">مسح</button>
+                <button onclick="showScreen('myqrs-screen')">رموزي</button>
+                <button onclick="showScreen('settings-screen')">الإعدادات</button>
+            </div>
+        </div>
+
+        <!-- شاشة إنشاء رمز استجابة سريعة لنوع معين (على سبيل المثال: URL) -->
+        <div id="create-qr-screen" class="screen">
+            <h1 id="create-qr-title">إنشاء رمز استجابة سريعة: الرابط</h1>
+            <div id="qr-input-area">
+                <!-- سيتم ملء هذا بناءً على النوع بواسطة JavaScript -->
+                <input type="text" id="qr-data-input" placeholder="أدخل الرابط">
+                <button onclick="generateQR()">إنشاء</button>
+            </div>
+            <div id="qr-result" style="display:none;">
+                <canvas id="qr-canvas"></canvas>
+                <div>
+                    <button onclick="downloadQR()">تحميل</button>
+                    <button onclick="saveToMyQRs()">حفظ في رموزي</button>
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <button onclick="showScreen('create-type-screen')">إنشاء QR</button>
+                <button onclick="showScreen('history-screen')">السجل</button>
+                <button onclick="showScreen('scan-screen')">مسح</button>
+                <button onclick="showScreen('myqrs-screen')">رموزي</button>
+                <button onclick="showScreen('settings-screen')">الإعدادات</button>
+            </div>
+        </div>
+
+        <!-- شاشة مسح رمز الاستجابة السريعة -->
+        <div id="scan-screen" class="screen">
+            <h1>MEQR</h1>
+            <div id="scanner-container">
+                <video id="scanner" width="100%" playsinline></video>
+                <canvas id="scan-canvas" style="display:none;"></canvas>
+                <div id="scan-result"></div>
+            </div>
+            <button onclick="startScan()">بدء المسح</button>
+            <button onclick="stopScan()">إيقاف المسح</button>
+            <div class="bottom-nav">
+                <button onclick="showScreen('create-type-screen')">إنشاء QR</button>
+                <button onclick="showScreen('history-screen')">السجل</button>
+                <button onclick="showScreen('scan-screen')">مسح</button>
+                <button onclick="showScreen('myqrs-screen')">رموزي</button>
+                <button onclick="showScreen('settings-screen')">الإعدادات</button>
+            </div>
+        </div>
+
+        <!-- شاشة سجل المسح -->
+        <div id="history-screen" class="screen">
+            <h1>السجل</h1>
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('scanned-tab')">تم مسحها</button>
+                <button class="tab" onclick="switchTab('favorites-tab')">المفضلة</button>
+            </div>
+            <div id="scanned-tab" class="tab-content active">
+                <p id="no-scanned">لم تقم بمسح أي رموز QR حتى الآن.</p>
+                <ul id="scanned-list"></ul>
+            </div>
+            <div id="favorites-tab" class="tab-content">
+                <p id="no-favorites">لم تقم بإضافة أي رموز QR إلى المفضلة بعد.</p>
+                <ul id="favorites-list"></ul>
+            </div>
+            <button onclick="showScreen('scan-screen')">مسح رمز الاستجابة السريعة</button>
+            <div class="bottom-nav">
+                <button onclick="showScreen('create-type-screen')">إنشاء QR</button>
+                <button onclick="showScreen('history-screen')">السجل</button>
+                <button onclick="showScreen('scan-screen')">مسح</button>
+                <button onclick="showScreen('myqrs-screen')">رموزي</button>
+                <button onclick="showScreen('settings-screen')">الإعدادات</button>
+            </div>
+        </div>
+
+        <!-- شاشة رموز الاستجابة السريعة الخاصة بي -->
+        <div id="myqrs-screen" class="screen">
+            <h1>رموز الاستجابة السريعة الخاصة بي</h1>
+            <div class="controls">
+                <button>تحديد الكل</button>
+                <input type="text" placeholder="بحث...">
+            </div>
+            <ul id="myqrs-list">
+                <!-- سيتم تعبئة هذا من خلال JavaScript -->
+                <li>
+                    <p>سپ ستار</p>
+                    <p>http://qr.me-qr.com/MaiZLN9S</p>
+                    <p>النوع: رابط</p>
+                    <p>تم الإنشاء: 25.08.07</p>
+                    <div>
+                        <button>تحميل</button>
+                        <button>خيارات</button>
+                    </div>
+                </li>
+            </ul>
+            <div class="pagination">
+                <span>10 / صفحة</span>
+                <select>
+                    <option>10</option>
+                    <option>20</option>
+                    <option>50</option>
+                </select>
+            </div>
+            <div class="bottom-nav">
+                <button onclick="showScreen('create-type-screen')">إنشاء QR</button>
+                <button onclick="showScreen('history-screen')">السجل</button>
+                <button onclick="showScreen('scan-screen')">مسح</button>
+                <button onclick="showScreen('myqrs-screen')">رموزي</button>
+                <button onclick="showScreen('settings-screen')">الإعدادات</button>
+            </div>
+        </div>
+
+        <!-- شاشة الإعدادات -->
+        <div id="settings-screen" class="screen">
+            <h1>الإعدادات</h1>
+            <div class="settings-option">
+                <label>الاهتزاز عند المسح</label>
+                <input type="checkbox" id="vibrate-setting" checked>
+            </div>
+            <div class="settings-option">
+                <label>فتح المواقع تلقائيًا</label>
+                <input type="checkbox" id="auto-open-setting" checked>
+            </div>
+            <div class="settings-option">
+                <label>حفظ السجل</label>
+                <input type="checkbox" id="save-history-setting" checked>
+            </div>
+            <hr>
+            <div class="settings-link"><a href="#">المساعدة</a></div>
+            <div class="settings-link"><a href="#">أرسل لنا تعليقاتك</a></div>
+            <div class="settings-link"><a href="#">التسعير</a></div>
+            <div class="settings-link"><a href="#" onclick="deleteAccount()">حذف الحساب</a></div>
+            <div class="settings-link"><a href="#" onclick="logout()">تسجيل الخروج</a></div>
+            <div class="bottom-nav">
+                <button onclick="showScreen('create-type-screen')">إنشاء QR</button>
+                <button onclick="showScreen('history-screen')">السجل</button>
+                <button onclick="showScreen('scan-screen')">مسح</button>
+                <button onclick="showScreen('myqrs-screen')">رموزي</button>
+                <button onclick="showScreen('settings-screen')">الإعدادات</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
