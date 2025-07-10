@@ -3,96 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEQR - مولد و قارئ رمز الاستجابة السريعة</title>
+    <title>MEQR - تحفة تصميمية في مجال التكنولوجيا</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
             --primary: #4361ee;
-            --primary-dark: #3a0ca3;
-            --primary-light: #4895ef;
-            --secondary: #7209b7;
-            --accent: #f72585;
-            --success: #4cc9f0;
+            --secondary: #3a0ca3;
+            --accent: #4cc9f0;
+            --gradient-start: #7209b7;
+            --gradient-end: #3a0ca3;
+            --dark: #10002b;
             --light: #f8f9fa;
-            --dark: #212529;
-            --darker: #121212;
+            --success: #4cc9f0;
             --gray: #6c757d;
             --light-gray: #e9ecef;
             --border-radius: 20px;
-            --shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-            --gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --neon-shadow: 0 0 15px rgba(67, 97, 238, 0.7);
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Tajawal', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #f0f4ff, #e0e7ff);
-            color: var(--dark);
+            background: linear-gradient(135deg, var(--dark), #240046);
+            color: var(--light);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
             direction: rtl;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* خلفية الجسيمات المتحركة */
+        #particles-js {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
         }
         
         .container {
             width: 100%;
             max-width: 420px;
-            background: white;
+            background: rgba(25, 0, 51, 0.85);
             border-radius: var(--border-radius);
             overflow: hidden;
-            box-shadow: var(--shadow);
-            height: 90vh;
+            box-shadow: var(--shadow), var(--neon-shadow);
+            height: 85vh;
             display: flex;
             flex-direction: column;
             position: relative;
-            transition: all 0.4s ease;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(114, 9, 183, 0.3);
         }
         
         .app-header {
-            background: var(--gradient);
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
             color: white;
             padding: 25px 20px;
             text-align: center;
             position: relative;
-            box-shadow: 0 4px 20px rgba(58, 12, 163, 0.3);
-            overflow: hidden;
-        }
-        
-        .app-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            transform: rotate(30deg);
+            border-bottom: 2px solid var(--accent);
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0 90%);
         }
         
         .app-header h1 {
-            font-size: 1.9rem;
-            font-weight: 800;
+            font-size: 2.2rem;
+            font-weight: 900;
             margin-bottom: 5px;
-            letter-spacing: -0.5px;
-            position: relative;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: -1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
         
         .app-header p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-            font-weight: 300;
-            position: relative;
+            font-size: 1rem;
+            opacity: 0.85;
+            max-width: 80%;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .experience-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            border-radius: 50px;
+            padding: 8px 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s infinite;
+            border: 1px solid rgba(76, 201, 240, 0.5);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(76, 201, 240, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0); }
         }
         
         .app-content {
@@ -100,48 +127,42 @@
             overflow-y: auto;
             padding: 20px;
             position: relative;
-            background: #fafbff;
         }
         
         .screen {
             display: none;
             opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.4s ease;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         .screen.active {
             display: block;
             opacity: 1;
             transform: translateY(0);
-            animation: fadeIn 0.4s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         
         .btn {
-            background: var(--gradient);
+            background: linear-gradient(to right, var(--primary), var(--gradient-start));
             color: white;
             border: none;
-            padding: 16px 24px;
-            border-radius: 14px;
-            font-size: 1.05rem;
-            font-weight: 600;
+            padding: 16px 20px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             transition: all 0.3s ease;
             width: 100%;
-            margin: 12px 0;
-            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
+            margin: 15px 0;
+            box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
             z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .btn::before {
@@ -151,7 +172,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            background: linear-gradient(to right, var(--accent), var(--gradient-start));
             opacity: 0;
             transition: opacity 0.3s ease;
             z-index: -1;
@@ -159,40 +180,34 @@
         
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+            box-shadow: 0 10px 25px rgba(114, 9, 183, 0.4);
         }
         
         .btn:hover::before {
             opacity: 1;
         }
         
-        .btn:active {
-            transform: translateY(1px);
-            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
-        }
-        
         .btn-outline {
             background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
+            border: 2px solid var(--accent);
+            color: var(--accent);
             box-shadow: none;
         }
         
         .btn-outline:hover {
-            background: rgba(67, 97, 238, 0.05);
-            transform: none;
+            background: rgba(76, 201, 240, 0.1);
         }
         
         .section-title {
-            font-size: 1.35rem;
-            margin: 25px 0 18px;
-            color: var(--primary-dark);
-            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 25px 0 20px;
+            color: var(--accent);
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 12px;
             position: relative;
-            padding-bottom: 12px;
+            padding-bottom: 10px;
         }
         
         .section-title::after {
@@ -200,18 +215,10 @@
             position: absolute;
             bottom: 0;
             right: 0;
-            width: 60px;
-            height: 4px;
-            background: var(--primary-light);
-            border-radius: 4px;
-        }
-        
-        .welcome-text {
-            font-size: 1rem;
-            color: var(--gray);
-            line-height: 1.6;
-            margin-bottom: 25px;
-            text-align: center;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent), transparent);
+            border-radius: 3px;
         }
         
         .qr-types-grid {
@@ -222,66 +229,62 @@
         }
         
         .qr-type {
-            background: white;
-            border-radius: 16px;
-            padding: 18px 12px;
+            background: rgba(58, 12, 163, 0.2);
+            border-radius: var(--border-radius);
+            padding: 20px 10px;
             text-align: center;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid var(--light-gray);
-            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(114, 9, 183, 0.3);
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
         }
         
         .qr-type:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(67, 97, 238, 0.15);
-            border-color: var(--primary-light);
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: var(--shadow), var(--neon-shadow);
+            border-color: var(--accent);
+            background: rgba(67, 97, 238, 0.25);
         }
         
         .qr-type i {
             font-size: 2.2rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
-        }
-        
-        .qr-type:hover i {
-            transform: scale(1.15);
+            color: var(--accent);
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
         }
         
         .qr-type span {
             font-size: 0.9rem;
             font-weight: 600;
             display: block;
-            color: var(--dark);
         }
         
         .tabs {
             display: flex;
-            background: var(--light-gray);
-            border-radius: 14px;
+            background: rgba(58, 12, 163, 0.2);
+            border-radius: 50px;
             padding: 6px;
             margin: 25px 0;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid rgba(114, 9, 183, 0.3);
+            backdrop-filter: blur(5px);
         }
         
         .tab {
             flex: 1;
             text-align: center;
             padding: 12px;
-            border-radius: 12px;
-            font-weight: 600;
+            border-radius: 50px;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            color: var(--gray);
+            z-index: 1;
         }
         
         .tab.active {
-            background: white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-            color: var(--primary);
+            background: linear-gradient(to right, var(--primary), var(--gradient-start));
+            box-shadow: 0 4px 10px rgba(114, 9, 183, 0.3);
         }
         
         .tab-content {
@@ -294,66 +297,61 @@
         
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: var(--gray);
+            padding: 50px 20px;
+            color: var(--light-gray);
         }
         
         .empty-state i {
-            font-size: 3.8rem;
-            margin-bottom: 15px;
-            color: #dbe4ff;
-            opacity: 0.7;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: rgba(114, 9, 183, 0.3);
         }
         
         .empty-state h3 {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             margin-bottom: 10px;
-            color: var(--dark);
+            font-weight: 700;
         }
         
         .empty-state p {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             line-height: 1.6;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .qr-item {
-            background: white;
+            background: rgba(58, 12, 163, 0.15);
             border-radius: var(--border-radius);
             padding: 18px;
             margin-bottom: 18px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid var(--light-gray);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(114, 9, 183, 0.2);
+            backdrop-filter: blur(5px);
             transition: all 0.3s ease;
         }
         
         .qr-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(67, 97, 238, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(114, 9, 183, 0.25);
+            border-color: var(--accent);
         }
         
         .qr-item-title {
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 8px;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.1rem;
-        }
-        
-        .qr-item-title i {
-            color: var(--primary);
+            color: var(--accent);
             font-size: 1.1rem;
         }
         
         .qr-item-content {
             font-size: 0.9rem;
-            color: var(--gray);
+            color: var(--light-gray);
             margin-bottom: 12px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            padding-right: 5px;
         }
         
         .qr-item-meta {
@@ -372,10 +370,10 @@
         .action-btn {
             flex: 1;
             padding: 10px;
-            border-radius: 10px;
-            background: var(--light-gray);
+            border-radius: 12px;
+            background: rgba(67, 97, 238, 0.2);
             border: none;
-            color: var(--dark);
+            color: var(--light);
             font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -383,42 +381,40 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            font-weight: 500;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(114, 9, 183, 0.3);
         }
         
         .action-btn:hover {
-            background: var(--primary);
-            color: white;
+            background: rgba(76, 201, 240, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
         }
         
         .qr-preview {
             text-align: center;
             margin: 25px 0;
-            padding: 20px;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
         }
         
         #qrcode {
             display: inline-block;
-            padding: 15px;
+            padding: 20px;
             background: white;
             border-radius: var(--border-radius);
-            margin: 15px auto;
+            box-shadow: var(--shadow);
+            margin: 25px auto;
+            border: 2px solid var(--accent);
         }
         
         .scanner-container {
             position: relative;
             width: 100%;
             height: 320px;
-            background: var(--darker);
+            background: var(--dark);
             border-radius: var(--border-radius);
             overflow: hidden;
             margin: 25px 0;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px rgba(76, 201, 240, 0.2);
         }
         
         #scanner-video {
@@ -439,27 +435,27 @@
         }
         
         .scanner-frame {
-            width: 230px;
-            height: 230px;
+            width: 220px;
+            height: 220px;
             border: 3px solid var(--success);
-            border-radius: 14px;
-            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.6);
-            animation: pulse 2s infinite;
+            border-radius: 15px;
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.7);
+            animation: scanner-anim 3s infinite;
         }
         
-        @keyframes pulse {
+        @keyframes scanner-anim {
             0% { border-color: var(--success); }
-            50% { border-color: rgba(76, 201, 240, 0.5); }
+            50% { border-color: var(--accent); }
             100% { border-color: var(--success); }
         }
         
         .bottom-nav {
             display: flex;
             justify-content: space-around;
-            background: white;
-            border-top: 1px solid var(--light-gray);
+            background: rgba(25, 0, 51, 0.9);
+            border-top: 1px solid rgba(114, 9, 183, 0.3);
             padding: 15px 0;
-            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.03);
+            backdrop-filter: blur(10px);
         }
         
         .nav-item {
@@ -469,75 +465,71 @@
             font-size: 0.75rem;
             color: var(--gray);
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            padding: 5px 15px;
-            border-radius: 12px;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 15px;
             position: relative;
         }
         
         .nav-item i {
             font-size: 1.4rem;
             margin-bottom: 5px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
         
         .nav-item.active {
-            color: var(--primary);
-            transform: translateY(-8px);
+            color: var(--accent);
+            transform: translateY(-10px);
         }
         
         .nav-item.active i {
-            color: var(--primary);
-            transform: scale(1.15);
+            color: var(--accent);
+            text-shadow: 0 0 15px rgba(76, 201, 240, 0.7);
         }
         
         .nav-item::after {
             content: '';
             position: absolute;
             bottom: -5px;
-            width: 6px;
-            height: 6px;
-            background: var(--primary);
-            border-radius: 50%;
-            opacity: 0;
-            transition: all 0.3s ease;
+            width: 0;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 0.3s ease;
         }
         
         .nav-item.active::after {
-            opacity: 1;
-            bottom: -2px;
+            width: 30px;
         }
         
         .nav-item:hover {
-            color: var(--primary);
+            color: var(--accent);
+        }
+        
+        .nav-item:hover i {
+            transform: scale(1.2);
         }
         
         .settings-option {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--light-gray);
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(114, 9, 183, 0.2);
         }
         
         .settings-label {
             display: flex;
             align-items: center;
-            gap: 14px;
-            font-weight: 500;
-            font-size: 1rem;
-        }
-        
-        .settings-label i {
-            color: var(--primary);
-            font-size: 1.2rem;
+            gap: 15px;
+            font-weight: 600;
         }
         
         .switch {
             position: relative;
             display: inline-block;
-            width: 52px;
-            height: 26px;
+            width: 60px;
+            height: 30px;
         }
         
         .switch input {
@@ -553,22 +545,23 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #ccc;
+            background-color: #3a0ca3;
             transition: .4s;
             border-radius: 34px;
+            border: 1px solid rgba(114, 9, 183, 0.5);
         }
         
         .slider:before {
             position: absolute;
             content: "";
-            height: 20px;
-            width: 20px;
-            left: 3px;
+            height: 22px;
+            width: 22px;
+            left: 4px;
             bottom: 3px;
-            background-color: white;
+            background: linear-gradient(to right, var(--accent), var(--primary));
             transition: .4s;
             border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         
         input:checked + .slider {
@@ -576,93 +569,78 @@
         }
         
         input:checked + .slider:before {
-            transform: translateX(26px);
+            transform: translateX(28px);
+            background: var(--accent);
         }
         
         .settings-link {
-            padding: 16px 0;
-            border-bottom: 1px solid var(--light-gray);
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(114, 9, 183, 0.2);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
         
         .settings-link:hover {
-            background: rgba(67, 97, 238, 0.03);
-            border-radius: 10px;
+            background: rgba(114, 9, 183, 0.1);
             padding-left: 10px;
-        }
-        
-        .settings-link i {
-            color: var(--gray);
-            transition: all 0.2s ease;
-        }
-        
-        .settings-link:hover i {
-            color: var(--primary);
-            transform: translateX(-5px);
+            border-radius: var(--border-radius);
         }
         
         .divider {
             height: 1px;
-            background: var(--light-gray);
-            margin: 20px 0;
+            background: linear-gradient(to right, transparent, var(--accent), transparent);
+            margin: 25px 0;
+            opacity: 0.3;
         }
         
         .create-input {
             width: 100%;
-            padding: 16px 18px;
-            border-radius: 14px;
-            border: 1px solid var(--light-gray);
-            margin: 15px 0;
+            padding: 16px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(114, 9, 183, 0.5);
+            margin: 18px 0;
             font-size: 1rem;
-            background: white;
+            background: rgba(58, 12, 163, 0.15);
+            color: var(--light);
             transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            backdrop-filter: blur(5px);
         }
         
         .create-input:focus {
             outline: none;
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
+            background: rgba(58, 12, 163, 0.25);
         }
         
-        .controls {
-            display: flex;
-            gap: 12px;
-            margin: 18px 0;
-        }
-        
-        .pagination {
+        .tech-stack {
             display: flex;
             justify-content: center;
-            align-items: center;
-            margin: 20px 0;
-            gap: 10px;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 25px 0;
         }
         
-        .pagination-btn {
-            width: 36px;
-            height: 36px;
+        .tech-item {
+            background: rgba(67, 97, 238, 0.15);
             border-radius: 50%;
-            background: var(--light-gray);
-            border: none;
+            width: 60px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            font-size: 1.8rem;
+            border: 1px solid rgba(114, 9, 183, 0.3);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
         }
         
-        .pagination-btn:hover {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .pagination-btn.active {
-            background: var(--primary);
-            color: white;
+        .tech-item:hover {
+            transform: translateY(-5px) scale(1.1);
+            background: rgba(76, 201, 240, 0.25);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.3);
         }
         
         @media (max-width: 480px) {
@@ -676,27 +654,42 @@
             }
             
             .app-header h1 {
-                font-size: 1.7rem;
-            }
-            
-            .section-title {
-                font-size: 1.25rem;
+                font-size: 1.8rem;
             }
         }
     </style>
 </head>
 <body>
+    <div id="particles-container"></div>
+    
     <div class="container">
         <div class="app-header">
-            <h1>MEQR</h1>
-            <p>مولد و قارئ رمز الاستجابة السريعة</p>
+            <div class="experience-badge">
+                <i class="fas fa-medal"></i> 12+ سنوات خبرة
+            </div>
+            <h1>MEQR PRO</h1>
+            <p>مولد وقارئ رموز QR بتقنيات متقدمة يعكس خبرتي الواسعة في التصميم والتطوير</p>
         </div>
         
         <div class="app-content">
-            <!-- شاشة الترحيب -->
+            <!-- شاشة الترحيب مع عرض الخبرة -->
             <div id="welcome-screen" class="screen active">
-                <h2 class="section-title"><i class="fas fa-qrcode"></i>مرحبًا بك!</h2>
-                <p class="welcome-text">أنشئ رموز QR ديناميكية مجانًا بلمسات قليلة! يمكنك مسح الرموز بسهولة وإنشاء رموزك الخاصة ببياناتك الشخصية أو روابطك المفضلة.</p>
+                <h2 class="section-title"><i class="fas fa-stars"></i>خبرتي التقنية</h2>
+                
+                <div class="tech-stack">
+                    <div class="tech-item"><i class="fab fa-js"></i></div>
+                    <div class="tech-item"><i class="fab fa-react"></i></div>
+                    <div class="tech-item"><i class="fab fa-node-js"></i></div>
+                    <div class="tech-item"><i class="fab fa-python"></i></div>
+                    <div class="tech-item"><i class="fas fa-database"></i></div>
+                    <div class="tech-item"><i class="fas fa-cloud"></i></div>
+                </div>
+                
+                <p style="text-align: center; line-height: 1.8; margin: 20px 0;">
+                    أكثر من 12 عامًا من الخبرة في تطوير حلول تكنولوجية متقدمة، 
+                    مع أكثر من 50 مشروعًا ناجحًا في مجال تطبيقات الجوال والويب.
+                    تصميم واجهات مستخدم مبدعة هي شغفي ومجال تخصصي.
+                </p>
                 
                 <button class="btn" onclick="showScreen('scan-screen')">
                     <i class="fas fa-camera"></i> مسح رمز الاستجابة السريعة
@@ -718,7 +711,7 @@
             <!-- شاشة إنشاء رمز الاستجابة السريعة: اختيار النوع -->
             <div id="create-type-screen" class="screen">
                 <h2 class="section-title"><i class="fas fa-qrcode"></i>اختر نوع رمز الاستجابة السريعة</h2>
-                <p class="welcome-text">اختر نوع المحتوى الذي تريد إنشاء رمز QR له، ثم املأ البيانات المطلوبة</p>
+                <p>كيف يعمل؟</p>
                 
                 <div class="qr-types-grid">
                     <div class="qr-type" onclick="showCreateScreen('رابط / URL')">
@@ -735,7 +728,7 @@
                     </div>
                     <div class="qr-type" onclick="showCreateScreen('متجر التطبيقات')">
                         <i class="fas fa-mobile-alt"></i>
-                        <span>متجر التطبيقات</span>
+                        <span> اسم المستخدم</span>
                     </div>
                     <div class="qr-type" onclick="showCreateScreen('نص')">
                         <i class="fas fa-font"></i>
@@ -747,7 +740,7 @@
                     </div>
                     <div class="qr-type" onclick="showCreateScreen('Wi-Fi')">
                         <i class="fas fa-wifi"></i>
-                        <span>Wi-Fi</span>
+                        <span>رقم الهاتف</span>
                     </div>
                     <div class="qr-type" onclick="showCreateScreen('صوت')">
                         <i class="fas fa-music"></i>
@@ -807,8 +800,8 @@
                 <div id="scan-result" style="margin-top: 20px; display: none;">
                     <h3 class="section-title"><i class="fas fa-check-circle"></i>تم المسح بنجاح!</h3>
                     <div class="qr-item">
-                        <div class="qr-item-title"><i class="fas fa-qrcode"></i> <span id="scanned-title">عنوان المسح</span></div>
-                        <div class="qr-item-content" id="scanned-content">المحتوى الذي تم مسحه</div>
+                        <div class="qr-item-title" id="scanned-title">موقع MEQR الرسمي</div>
+                        <div class="qr-item-content" id="scanned-content">https://me-qr.com</div>
                         <div class="qr-item-meta">
                             <span>تاريخ المسح: اليوم</span>
                         </div>
@@ -860,13 +853,13 @@
             <div id="myqrs-screen" class="screen">
                 <h2 class="section-title"><i class="fas fa-qrcode"></i>رموز الاستجابة السريعة الخاصة بي</h2>
                 
-                <div class="controls">
+                <div class="controls" style="display: flex; gap: 10px; margin: 15px 0;">
                     <button class="action-btn"><i class="fas fa-check-circle"></i> تحديد الكل</button>
                     <input type="text" class="create-input" placeholder="بحث..." style="flex: 3;">
                 </div>
                 
                 <div class="qr-item">
-                    <div class="qr-item-title"><i class="fas fa-link"></i> سپ ستار</div>
+                    <div class="qr-item-title">سپ ستار</div>
                     <div class="qr-item-content">http://qr.me-qr.com/MaiZLN9S</div>
                     <div class="qr-item-meta">
                         <span>النوع: رابط</span>
@@ -879,7 +872,7 @@
                 </div>
                 
                 <div class="qr-item">
-                    <div class="qr-item-title"><i class="fas fa-globe"></i> موقعي الشخصي</div>
+                    <div class="qr-item-title">موقعي الشخصي</div>
                     <div class="qr-item-content">https://mywebsite.com</div>
                     <div class="qr-item-meta">
                         <span>النوع: رابط</span>
@@ -892,7 +885,7 @@
                 </div>
                 
                 <div class="qr-item">
-                    <div class="qr-item-title"><i class="fas fa-phone"></i> اتصل بي</div>
+                    <div class="qr-item-title">اتصل بي</div>
                     <div class="qr-item-content">tel:+1234567890</div>
                     <div class="qr-item-meta">
                         <span>النوع: هاتف</span>
@@ -904,12 +897,8 @@
                     </div>
                 </div>
                 
-                <div class="pagination">
-                    <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
-                    <button class="pagination-btn active">1</button>
-                    <button class="pagination-btn">2</button>
-                    <button class="pagination-btn">3</button>
-                    <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+                <div style="text-align: center; margin: 25px 0; font-size: 0.9rem; color: var(--gray);">
+                    10 / صفحة <i class="fas fa-caret-down"></i>
                 </div>
             </div>
             
@@ -1111,9 +1100,6 @@
             
             // إظهار خيارات النتيجة
             document.getElementById('qr-result').style.display = 'block';
-            
-            // التمرير لأسفل لرؤية النتيجة
-            container.scrollIntoView({behavior: 'smooth'});
         }
         
         // تحميل رمز الاستجابة السريعة
@@ -1170,7 +1156,60 @@
         // عند التحميل، إظهار الشاشة الترحيبية
         document.addEventListener('DOMContentLoaded', function() {
             showScreen('welcome-screen');
+            
+            // إنشاء جسيمات متحركة في الخلفية
+            createParticles();
         });
+        
+        // إنشاء جسيمات متحركة
+        function createParticles() {
+            const container = document.createElement('div');
+            container.id = 'particles-js';
+            document.body.prepend(container);
+            
+            // محاكاة بسيطة للجسيمات
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = Math.random() * 5 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.background = `rgba(${Math.floor(Math.random() * 100 + 156)}, 
+                                            ${Math.floor(Math.random() * 100 + 56)}, 
+                                            ${Math.floor(Math.random() * 200 + 55)}, 
+                                            ${Math.random() * 0.5 + 0.1})`;
+                particle.style.borderRadius = '50%';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.zIndex = '1';
+                container.appendChild(particle);
+                
+                // تحريك الجسيمات
+                animateParticle(particle);
+            }
+        }
+        
+        // تحريك الجسيمات
+        function animateParticle(element) {
+            let x = parseFloat(element.style.left);
+            let y = parseFloat(element.style.top);
+            let dx = (Math.random() - 0.5) * 0.5;
+            let dy = (Math.random() - 0.5) * 0.5;
+            
+            function move() {
+                x += dx;
+                y += dy;
+                
+                if (x < 0 || x > window.innerWidth) dx *= -1;
+                if (y < 0 || y > window.innerHeight) dy *= -1;
+                
+                element.style.left = x + 'px';
+                element.style.top = y + 'px';
+                
+                requestAnimationFrame(move);
+            }
+            
+            move();
+        }
     </script>
 </body>
 </html>
