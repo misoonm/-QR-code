@@ -3,27 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEQR - عمار الوزير منشئ باركود </title>
+    <title>عمار الوزير | إنشاء ومسح رموز QR</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --accent: #4cc9f0;
-            --gradient-start: #7209b7;
-            --gradient-end: #3a0ca3;
-            --dark: #10002b;
-            --light: #f8f9fa;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
             --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
             --gray: #6c757d;
-            --light-gray: #e9ecef;
-            --border-radius: 20px;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            --neon-shadow: 0 0 15px rgba(67, 97, 238, 0.7);
+            --danger: #e63946;
+            --warning: #ff9e00;
+            --radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
         
         * {
@@ -34,393 +30,284 @@
         }
         
         body {
-            background: linear-gradient(135deg, var(--dark), #240046);
-            color: var(--light);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            direction: rtl;
+            background-color: #f0f2f5;
+            color: var(--dark);
             overflow-x: hidden;
             position: relative;
+            min-height: 100vh;
+            padding-bottom: 80px;
         }
         
-        /* خلفية الجسيمات المتحركة */
-        #particles-js {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 420px;
-            background: rgba(25, 0, 51, 0.85);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow), var(--neon-shadow);
-            height: 85vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            z-index: 10;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(114, 9, 183, 0.3);
-        }
-        
-        .app-header {
-            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+        /* الهيدر */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 25px 20px;
-            text-align: center;
-            position: relative;
-            border-bottom: 2px solid var(--accent);
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0 90%);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
-        .app-header h1 {
-            font-size: 2.2rem;
-            font-weight: 900;
-            margin-bottom: 5px;
-            letter-spacing: -1px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        .app-header p {
-            font-size: 1rem;
-            opacity: 0.85;
-            max-width: 80%;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-        
-        .experience-badge {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(5px);
-            border-radius: 50px;
-            padding: 8px 15px;
-            font-size: 0.8rem;
-            font-weight: 700;
+        .logo {
             display: flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            animation: pulse 2s infinite;
-            border: 1px solid rgba(76, 201, 240, 0.5);
+            gap: 10px;
         }
         
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(76, 201, 240, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0); }
+        .logo i {
+            font-size: 28px;
         }
         
-        .app-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            position: relative;
-        }
-        
-        .screen {
-            display: none;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        .screen.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .btn {
-            background: linear-gradient(to right, var(--primary), var(--gradient-start));
-            color: white;
-            border: none;
-            padding: 16px 20px;
-            border-radius: 50px;
-            font-size: 1.1rem;
+        .logo h1 {
+            font-size: 22px;
             font-weight: 700;
-            cursor: pointer;
-            display: inline-flex;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-info .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin: 15px 0;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+            font-size: 18px;
         }
         
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
+        /* شريط التنقل السفلي */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to right, var(--accent), var(--gradient-start));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: -1;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
         }
         
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(114, 9, 183, 0.4);
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--gray);
+            font-size: 12px;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: var(--radius);
         }
         
-        .btn:hover::before {
-            opacity: 1;
+        .nav-item.active {
+            color: var(--primary);
+            background: rgba(67, 97, 238, 0.1);
         }
         
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--accent);
-            color: var(--accent);
-            box-shadow: none;
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
         }
         
-        .btn-outline:hover {
-            background: rgba(76, 201, 240, 0.1);
+        /* المحتوى الرئيسي */
+        .container {
+            max-width: 100%;
+            padding: 20px;
+            margin: 0 auto;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .section-title {
-            font-size: 1.5rem;
-            margin: 25px 0 20px;
-            color: var(--accent);
-            font-weight: 800;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--dark);
             display: flex;
             align-items: center;
-            gap: 12px;
-            position: relative;
-            padding-bottom: 10px;
+            gap: 10px;
         }
         
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(to right, var(--accent), transparent);
-            border-radius: 3px;
+        .section-title i {
+            color: var(--primary);
         }
         
-        .qr-types-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
-            margin: 25px 0;
-        }
-        
-        .qr-type {
-            background: rgba(58, 12, 163, 0.2);
-            border-radius: var(--border-radius);
-            padding: 20px 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(114, 9, 183, 0.3);
-            backdrop-filter: blur(5px);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .qr-type:hover {
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: var(--shadow), var(--neon-shadow);
-            border-color: var(--accent);
-            background: rgba(67, 97, 238, 0.25);
-        }
-        
-        .qr-type i {
-            font-size: 2.2rem;
-            color: var(--accent);
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
-        }
-        
-        .qr-type span {
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: block;
-        }
-        
-        .tabs {
-            display: flex;
-            background: rgba(58, 12, 163, 0.2);
-            border-radius: 50px;
-            padding: 6px;
-            margin: 25px 0;
-            border: 1px solid rgba(114, 9, 183, 0.3);
-            backdrop-filter: blur(5px);
-        }
-        
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1;
-        }
-        
-        .tab.active {
-            background: linear-gradient(to right, var(--primary), var(--gradient-start));
-            box-shadow: 0 4px 10px rgba(114, 9, 183, 0.3);
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            color: var(--light-gray);
-        }
-        
-        .empty-state i {
-            font-size: 3.5rem;
+        /* بطاقات */
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
             margin-bottom: 20px;
-            color: rgba(114, 9, 183, 0.3);
+            transition: transform 0.3s ease;
         }
         
-        .empty-state h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            font-weight: 700;
+        .card:hover {
+            transform: translateY(-5px);
         }
         
-        .empty-state p {
-            margin-bottom: 20px;
-            line-height: 1.6;
-            max-width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .qr-item {
-            background: rgba(58, 12, 163, 0.15);
-            border-radius: var(--border-radius);
-            padding: 18px;
-            margin-bottom: 18px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(114, 9, 183, 0.2);
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
-        }
-        
-        .qr-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(114, 9, 183, 0.25);
-            border-color: var(--accent);
-        }
-        
-        .qr-item-title {
-            font-weight: 800;
-            margin-bottom: 8px;
-            color: var(--accent);
-            font-size: 1.1rem;
-        }
-        
-        .qr-item-content {
-            font-size: 0.9rem;
-            color: var(--light-gray);
-            margin-bottom: 12px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        
-        .qr-item-meta {
+        .card-header {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--gray);
+            align-items: center;
+            margin-bottom: 15px;
         }
         
-        .qr-item-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px;
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
         }
         
-        .action-btn {
-            flex: 1;
-            padding: 10px;
+        .card-icon {
+            width: 50px;
+            height: 50px;
             border-radius: 12px;
-            background: rgba(67, 97, 238, 0.2);
-            border: none;
-            color: var(--light);
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            background: rgba(67, 97, 238, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(114, 9, 183, 0.3);
+            color: var(--primary);
+            font-size: 24px;
         }
         
-        .action-btn:hover {
-            background: rgba(76, 201, 240, 0.3);
+        /* إنشاء QR */
+        .qr-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .qr-type {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .qr-type:hover, .qr-type.active {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .qr-type i {
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .qr-type span {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .qr-form {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
             transform: translateY(-2px);
         }
         
-        .qr-preview {
-            text-align: center;
-            margin: 25px 0;
+        .btn-block {
+            display: block;
+            width: 100%;
         }
         
-        #qrcode {
-            display: inline-block;
-            padding: 20px;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            margin: 25px auto;
-            border: 2px solid var(--accent);
+        .btn-secondary {
+            background: #6c757d;
         }
         
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        /* مسح QR */
         .scanner-container {
             position: relative;
             width: 100%;
-            height: 320px;
-            background: var(--dark);
-            border-radius: var(--border-radius);
+            height: 300px;
+            background: #000;
+            border-radius: var(--radius);
             overflow: hidden;
-            margin: 25px 0;
-            border: 2px solid var(--accent);
-            box-shadow: 0 0 20px rgba(76, 201, 240, 0.2);
-        }
-        
-        #scanner-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            margin-bottom: 20px;
         }
         
         .scanner-overlay {
@@ -435,104 +322,219 @@
         }
         
         .scanner-frame {
-            width: 220px;
-            height: 220px;
-            border: 3px solid var(--success);
-            border-radius: 15px;
-            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.7);
-            animation: scanner-anim 3s infinite;
-        }
-        
-        @keyframes scanner-anim {
-            0% { border-color: var(--success); }
-            50% { border-color: var(--accent); }
-            100% { border-color: var(--success); }
-        }
-        
-        .bottom-nav {
-            display: flex;
-            justify-content: space-around;
-            background: rgba(25, 0, 51, 0.9);
-            border-top: 1px solid rgba(114, 9, 183, 0.3);
-            padding: 15px 0;
-            backdrop-filter: blur(10px);
-        }
-        
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.75rem;
-            color: var(--gray);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 8px 15px;
-            border-radius: 15px;
+            width: 70%;
+            height: 200px;
+            border: 2px solid var(--primary);
             position: relative;
         }
         
-        .nav-item i {
-            font-size: 1.4rem;
+        .scanner-frame::before,
+        .scanner-frame::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--primary);
+        }
+        
+        .scanner-frame::before {
+            top: 0;
+            left: 0;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .scanner-frame::after {
+            bottom: 0;
+            right: 0;
+            border-left: none;
+            border-top: none;
+        }
+        
+        .scanner-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        /* إدارة الرموز */
+        .qr-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .qr-item {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .qr-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .qr-item .title {
+            font-weight: 600;
+            font-size: 14px;
             margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .qr-item .date {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .qr-item .actions {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            display: flex;
+            gap: 5px;
+        }
+        
+        .action-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* التاريخ والمفضلة */
+        .history-tabs {
+            display: flex;
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            font-weight: 600;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
         
-        .nav-item.active {
-            color: var(--accent);
-            transform: translateY(-10px);
+        .tab.active {
+            background: var(--primary);
+            color: white;
         }
         
-        .nav-item.active i {
-            color: var(--accent);
-            text-shadow: 0 0 15px rgba(76, 201, 240, 0.7);
-        }
-        
-        .nav-item::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            width: 0;
-            height: 3px;
-            background: var(--accent);
-            border-radius: 3px;
-            transition: width 0.3s ease;
-        }
-        
-        .nav-item.active::after {
-            width: 30px;
-        }
-        
-        .nav-item:hover {
-            color: var(--accent);
-        }
-        
-        .nav-item:hover i {
-            transform: scale(1.2);
-        }
-        
-        .settings-option {
+        .history-list {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 0;
-            border-bottom: 1px solid rgba(114, 9, 183, 0.2);
+            flex-direction: column;
+            gap: 15px;
         }
         
-        .settings-label {
+        .history-item {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 15px;
             display: flex;
             align-items: center;
             gap: 15px;
+        }
+        
+        .history-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(67, 97, 238, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 20px;
+        }
+        
+        .history-content {
+            flex: 1;
+        }
+        
+        .history-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .history-date {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .favorite-btn {
+            color: #ffc107;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        /* الإعدادات */
+        .settings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .setting-item {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .setting-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .setting-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(67, 97, 238, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 18px;
+        }
+        
+        .setting-title {
             font-weight: 600;
         }
         
-        .switch {
+        .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 60px;
-            height: 30px;
+            width: 50px;
+            height: 24px;
         }
         
-        .switch input {
+        .toggle-switch input {
             opacity: 0;
             width: 0;
             height: 0;
@@ -545,23 +547,21 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #3a0ca3;
+            background-color: #ccc;
             transition: .4s;
-            border-radius: 34px;
-            border: 1px solid rgba(114, 9, 183, 0.5);
+            border-radius: 24px;
         }
         
         .slider:before {
             position: absolute;
             content: "";
-            height: 22px;
-            width: 22px;
+            height: 16px;
+            width: 16px;
             left: 4px;
-            bottom: 3px;
-            background: linear-gradient(to right, var(--accent), var(--primary));
+            bottom: 4px;
+            background-color: white;
             transition: .4s;
             border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         
         input:checked + .slider {
@@ -569,647 +569,496 @@
         }
         
         input:checked + .slider:before {
-            transform: translateX(28px);
-            background: var(--accent);
+            transform: translateX(26px);
         }
         
-        .settings-link {
-            padding: 18px 0;
-            border-bottom: 1px solid rgba(114, 9, 183, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-        
-        .settings-link:hover {
-            background: rgba(114, 9, 183, 0.1);
-            padding-left: 10px;
-            border-radius: var(--border-radius);
-        }
-        
-        .divider {
-            height: 1px;
-            background: linear-gradient(to right, transparent, var(--accent), transparent);
-            margin: 25px 0;
-            opacity: 0.3;
-        }
-        
-        .create-input {
-            width: 100%;
-            padding: 16px 20px;
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(114, 9, 183, 0.5);
-            margin: 18px 0;
-            font-size: 1rem;
-            background: rgba(58, 12, 163, 0.15);
-            color: var(--light);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-        
-        .create-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
-            background: rgba(58, 12, 163, 0.25);
-        }
-        
-        .tech-stack {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin: 25px 0;
-        }
-        
-        .tech-item {
-            background: rgba(67, 97, 238, 0.15);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
+        /* الرسائل */
+        .message {
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            border: 1px solid rgba(114, 9, 183, 0.3);
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
+            gap: 10px;
         }
         
-        .tech-item:hover {
-            transform: translateY(-5px) scale(1.1);
-            background: rgba(76, 201, 240, 0.25);
-            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.3);
+        .message.info {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .message.warning {
+            background: rgba(255, 158, 0, 0.1);
+            color: var(--warning);
+        }
+        
+        /* متجاوب */
+        @media (max-width: 768px) {
+            .qr-types {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            
+            .qr-list {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
         }
         
         @media (max-width: 480px) {
-            .container {
-                height: 95vh;
-                max-width: 100%;
+            .logo h1 {
+                font-size: 18px;
             }
             
-            .qr-types-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .section-title {
+                font-size: 18px;
             }
             
-            .app-header h1 {
-                font-size: 1.8rem;
+            .qr-types {
+                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            }
+            
+            .qr-list {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
             }
         }
     </style>
 </head>
 <body>
-    <div id="particles-container"></div>
+    <!-- الهيدر -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-qrcode"></i>
+            <h1>عمار الوزير لرموز QR</h1>
+        </div>
+        <div class="user-info">
+            <div class="avatar">ع</div>
+        </div>
+    </header>
     
+    <!-- المحتوى الرئيسي -->
     <div class="container">
-        <div class="app-header">
-            <div class="experience-badge">
-                <i class="fas fa-medal"></i> 12+ سنوات خبرة
-            </div>
-            <h1>QR PRO عمار الوزير</h1>
-            <p>مولد وقارئ رموز QR بتقنيات متقدمة </p>
-        </div>
-        
-        <div class="app-content">
-            <!-- شاشة الترحيب مع عرض الخبرة -->
-            <div id="welcome-screen" class="screen active">
-                <h2 class="section-title"><i class="fas fa-stars"></i>عمار الوزير</h2>
-                
-                <div class="tech-stack">
-                    <div class="tech-item"><i class="fab fa-js"></i></div>
-                    <div class="tech-item"><i class="fab fa-react"></i></div>
-                    <div class="tech-item"><i class="fab fa-node-js"></i></div>
-                    <div class="tech-item"><i class="fab fa-python"></i></div>
-                    <div class="tech-item"><i class="fas fa-database"></i></div>
-                    <div class="tech-item"><i class="fas fa-cloud"></i></div>
-                </div>
-                
-                <p style="text-align: center; line-height: 1.8; margin: 20px 0;">
-                    أكثر من 12 عامًا من الخبرة في تطوير حلول تكنولوجية متقدمة، 
-                    مع أكثر من 50 مشروعًا ناجحًا في مجال تطبيقات الجوال والويب.
-                    تصميم واجهات مستخدم مبدعة هي شغفي ومجال تخصصي.
-                </p>
-                
-                <button class="btn" onclick="showScreen('scan-screen')">
-                    <i class="fas fa-camera"></i> مسح رمز الاستجابة السريعة
-                </button>
-                
-                <button class="btn" onclick="showScreen('history-screen')">
-                    <i class="fas fa-history"></i> سجل المسح
-                </button>
-                
-                <button class="btn" onclick="showScreen('create-type-screen')">
-                    <i class="fas fa-plus-circle"></i> إنشاء رمز استجابة سريعة
-                </button>
-                
-                <button class="btn" onclick="showScreen('myqrs-screen')">
-                    <i class="fas fa-qrcode"></i> رموز الاستجابة السريعة الخاصة بي
-                </button>
+        <!-- صفحة إنشاء QR -->
+        <div id="create-page" class="page active">
+            <h2 class="section-title"><i class="fas fa-plus-circle"></i> إنشاء رمز QR جديد</h2>
+            
+            <div class="message info">
+                <i class="fas fa-info-circle"></i>
+                <div>اختر نوع المحتوى الذي تريد إنشاء رمز QR له</div>
             </div>
             
-            <!-- شاشة إنشاء رمز الاستجابة السريعة: اختيار النوع -->
-            <div id="create-type-screen" class="screen">
-                <h2 class="section-title"><i class="fas fa-qrcode"></i>اختر نوع رمز الاستجابة السريعة</h2>
-                <p>كيف يعمل؟</p>
-                
-                <div class="qr-types-grid">
-                    <div class="qr-type" onclick="showCreateScreen('رابط / URL')">
-                        <i class="fas fa-link"></i>
-                        <span>رابط / URL</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('PDF')">
-                        <i class="fas fa-file-pdf"></i>
-                        <span>PDF</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('صورة')">
-                        <i class="fas fa-image"></i>
-                        <span>صورة</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('متجر التطبيقات')">
-                        <i class="fas fa-mobile-alt"></i>
-                        <span> اسم المستخدم</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('نص')">
-                        <i class="fas fa-font"></i>
-                        <span>نص</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('خريطة')">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>خريطة</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('Wi-Fi')">
-                        <i class="fas fa-wifi"></i>
-                        <span>رقم الهاتف</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('صوت')">
-                        <i class="fas fa-music"></i>
-                        <span>صوت</span>
-                    </div>
-                    <div class="qr-type" onclick="showCreateScreen('WhatsApp')">
-                        <i class="fab fa-whatsapp"></i>
-                        <span>WhatsApp</span>
-                    </div>
+            <div class="qr-types">
+                <div class="qr-type active" data-type="url">
+                    <i class="fas fa-link"></i>
+                    <span>رابط</span>
+                </div>
+                <div class="qr-type" data-type="text">
+                    <i class="fas fa-font"></i>
+                    <span>نص</span>
+                </div>
+                <div class="qr-type" data-type="wifi">
+                    <i class="fas fa-wifi"></i>
+                    <span>Wi-Fi</span>
+                </div>
+                <div class="qr-type" data-type="email">
+                    <i class="fas fa-envelope"></i>
+                    <span>بريد</span>
+                </div>
+                <div class="qr-type" data-type="phone">
+                    <i class="fas fa-phone"></i>
+                    <span>مكالمة</span>
+                </div>
+                <div class="qr-type" data-type="sms">
+                    <i class="fas fa-comment-sms"></i>
+                    <span>رسالة</span>
+                </div>
+                <div class="qr-type" data-type="vcard">
+                    <i class="fas fa-address-card"></i>
+                    <span>vCard</span>
+                </div>
+                <div class="qr-type" data-type="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>موقع</span>
                 </div>
             </div>
             
-            <!-- شاشة إنشاء رمز استجابة سريعة -->
-            <div id="create-qr-screen" class="screen">
-                <h2 class="section-title" id="create-title"><i class="fas fa-qrcode"></i>إنشاء رمز استجابة سريعة</h2>
-                
-                <input type="text" class="create-input" id="qr-data-input" placeholder="أدخل الرابط أو النص">
-                
-                <button class="btn" onclick="generateQR()">
-                    <i class="fas fa-bolt"></i> إنشاء رمز الاستجابة السريعة
-                </button>
-                
-                <div class="qr-preview" id="qr-preview-container">
-                    <!-- سيتم عرض رمز الاستجابة السريعة هنا -->
+            <div class="qr-form">
+                <div class="form-group">
+                    <label for="qr-content">رابط الموقع</label>
+                    <input type="url" id="qr-content" placeholder="https://example.com" value="https://www.example.com">
                 </div>
                 
-                <div id="qr-result" style="display: none;">
-                    <button class="btn btn-outline" onclick="downloadQR()">
-                        <i class="fas fa-download"></i> تحميل رمز الاستجابة السريعة
-                    </button>
-                    
-                    <button class="btn btn-outline" onclick="saveQR()">
-                        <i class="fas fa-save"></i> حفظ في رموزي
-                    </button>
+                <div class="form-group">
+                    <label for="qr-name">اسم الرمز (اختياري)</label>
+                    <input type="text" id="qr-name" placeholder="اسم رمز QR">
                 </div>
+                
+                <button class="btn btn-block" id="generate-btn">إنشاء رمز QR</button>
             </div>
             
-            <!-- شاشة مسح رمز الاستجابة السريعة -->
-            <div id="scan-screen" class="screen">
-                <h2 class="section-title"><i class="fas fa-camera"></i>مسح رمز الاستجابة السريعة</h2>
-                
-                <div class="scanner-container">
-                    <video id="scanner-video"></video>
-                    <div class="scanner-overlay">
-                        <div class="scanner-frame"></div>
-                    </div>
-                </div>
-                
-                <button class="btn" onclick="startScan()">
-                    <i class="fas fa-play"></i> بدء المسح
-                </button>
-                
-                <button class="btn btn-outline" onclick="stopScan()">
-                    <i class="fas fa-stop"></i> إيقاف المسح
-                </button>
-                
-                <div id="scan-result" style="margin-top: 20px; display: none;">
-                    <h3 class="section-title"><i class="fas fa-check-circle"></i>تم المسح بنجاح!</h3>
-                    <div class="qr-item">
-                        <div class="qr-item-title" id="scanned-title">موقع MEQR الرسمي</div>
-                        <div class="qr-item-content" id="scanned-content">https://me-qr.com</div>
-                        <div class="qr-item-meta">
-                            <span>تاريخ المسح: اليوم</span>
-                        </div>
-                    </div>
-                    
-                    <button class="btn" onclick="openScannedContent()">
-                        <i class="fas fa-external-link-alt"></i> فتح المحتوى
-                    </button>
-                    
-                    <button class="btn btn-outline" onclick="saveToFavorites()">
-                        <i class="fas fa-star"></i> إضافة إلى المفضلة
-                    </button>
-                </div>
-            </div>
-            
-            <!-- شاشة سجل المسح -->
-            <div id="history-screen" class="screen">
-                <h2 class="section-title"><i class="fas fa-history"></i>سجل المسح</h2>
-                
-                <div class="tabs">
-                    <div class="tab active" onclick="switchTab('scanned-tab')">تم مسحها</div>
-                    <div class="tab" onclick="switchTab('favorites-tab')">المفضلة</div>
-                </div>
-                
-                <div id="scanned-tab" class="tab-content active">
-                    <div class="empty-state">
+            <div class="card" id="qr-result" style="display: none;">
+                <div class="card-header">
+                    <div class="card-title">الرمز المنشأ</div>
+                    <div class="card-icon">
                         <i class="fas fa-qrcode"></i>
-                        <h3>لا يوجد محتوى</h3>
-                        <p>لم تقم بمسح أي رموز QR حتى الآن.</p>
-                        <button class="btn" onclick="showScreen('scan-screen')">
-                            <i class="fas fa-camera"></i> مسح رمز الاستجابة السريعة
-                        </button>
                     </div>
                 </div>
                 
-                <div id="favorites-tab" class="tab-content">
-                    <div class="empty-state">
-                        <i class="fas fa-star"></i>
-                        <h3>لا يوجد محتوى</h3>
-                        <p>لم تقم بإضافة أي رموز QR إلى المفضلة بعد.</p>
-                        <button class="btn" onclick="showScreen('scan-screen')">
-                            <i class="fas fa-camera"></i> مسح رمز الاستجابة السريعة
-                        </button>
+                <div class="text-center">
+                    <div id="qrcode" class="mb-3"></div>
+                    <div class="flex gap-2">
+                        <button class="btn btn-secondary"><i class="fas fa-download"></i> تحميل</button>
+                        <button class="btn"><i class="fas fa-share-alt"></i> مشاركة</button>
+                        <button class="btn"><i class="fas fa-star"></i> حفظ</button>
                     </div>
-                </div>
-            </div>
-            
-            <!-- شاشة رموز الاستجابة السريعة الخاصة بي -->
-            <div id="myqrs-screen" class="screen">
-                <h2 class="section-title"><i class="fas fa-qrcode"></i>رموز الاستجابة السريعة الخاصة بي</h2>
-                
-                <div class="controls" style="display: flex; gap: 10px; margin: 15px 0;">
-                    <button class="action-btn"><i class="fas fa-check-circle"></i> تحديد الكل</button>
-                    <input type="text" class="create-input" placeholder="بحث..." style="flex: 3;">
-                </div>
-                
-                <div class="qr-item">
-                    <div class="qr-item-title">سپ ستار</div>
-                    <div class="qr-item-content">http://qr.me-qr.com/MaiZLN9S</div>
-                    <div class="qr-item-meta">
-                        <span>النوع: رابط</span>
-                        <span>تم الإنشاء: 08.07.25</span>
-                    </div>
-                    <div class="qr-item-actions">
-                        <button class="action-btn"><i class="fas fa-download"></i> تحميل</button>
-                        <button class="action-btn"><i class="fas fa-ellipsis-h"></i> خيارات</button>
-                    </div>
-                </div>
-                
-                <div class="qr-item">
-                    <div class="qr-item-title">موقعي الشخصي</div>
-                    <div class="qr-item-content">https://mywebsite.com</div>
-                    <div class="qr-item-meta">
-                        <span>النوع: رابط</span>
-                        <span>تم الإنشاء: 05.07.25</span>
-                    </div>
-                    <div class="qr-item-actions">
-                        <button class="action-btn"><i class="fas fa-download"></i> تحميل</button>
-                        <button class="action-btn"><i class="fas fa-ellipsis-h"></i> خيارات</button>
-                    </div>
-                </div>
-                
-                <div class="qr-item">
-                    <div class="qr-item-title">اتصل بي</div>
-                    <div class="qr-item-content">tel:+1234567890</div>
-                    <div class="qr-item-meta">
-                        <span>النوع: هاتف</span>
-                        <span>تم الإنشاء: 01.07.25</span>
-                    </div>
-                    <div class="qr-item-actions">
-                        <button class="action-btn"><i class="fas fa-download"></i> تحميل</button>
-                        <button class="action-btn"><i class="fas fa-ellipsis-h"></i> خيارات</button>
-                    </div>
-                </div>
-                
-                <div style="text-align: center; margin: 25px 0; font-size: 0.9rem; color: var(--gray);">
-                    10 / صفحة <i class="fas fa-caret-down"></i>
-                </div>
-            </div>
-            
-            <!-- شاشة الإعدادات -->
-            <div id="settings-screen" class="screen">
-                <h2 class="section-title"><i class="fas fa-cog"></i>الإعدادات</h2>
-                
-                <div class="settings-option">
-                    <div class="settings-label">
-                        <i class="fas fa-vibrate"></i>
-                        <span>الاهتزاز عند المسح</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                
-                <div class="settings-option">
-                    <div class="settings-label">
-                        <i class="fas fa-globe"></i>
-                        <span>فتح المواقع تلقائيًا</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                
-                <div class="settings-option">
-                    <div class="settings-label">
-                        <i class="fas fa-history"></i>
-                        <span>حفظ السجل</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                
-                <div class="divider"></div>
-                
-                <div class="settings-link">
-                    <div class="settings-label">
-                        <i class="fas fa-question-circle"></i>
-                        <span>المساعدة</span>
-                    </div>
-                    <i class="fas fa-chevron-left"></i>
-                </div>
-                
-                <div class="settings-link">
-                    <div class="settings-label">
-                        <i class="fas fa-comment-alt"></i>
-                        <span>أرسل لنا تعليقاتك</span>
-                    </div>
-                    <i class="fas fa-chevron-left"></i>
-                </div>
-                
-                <div class="settings-link">
-                    <div class="settings-label">
-                        <i class="fas fa-tag"></i>
-                        <span>التسعير</span>
-                    </div>
-                    <i class="fas fa-chevron-left"></i>
-                </div>
-                
-                <div class="settings-link">
-                    <div class="settings-label">
-                        <i class="fas fa-user-slash"></i>
-                        <span>حذف الحساب</span>
-                    </div>
-                    <i class="fas fa-chevron-left"></i>
-                </div>
-                
-                <div class="settings-link">
-                    <div class="settings-label">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>تسجيل الخروج</span>
-                    </div>
-                    <i class="fas fa-chevron-left"></i>
                 </div>
             </div>
         </div>
         
-        <div class="bottom-nav">
-            <div class="nav-item active" onclick="showScreen('create-type-screen')">
-                <i class="fas fa-plus-circle"></i>
-                <span>إنشاء QR</span>
+        <!-- صفحة مسح QR -->
+        <div id="scan-page" class="page">
+            <h2 class="section-title"><i class="fas fa-camera"></i> مسح رمز QR</h2>
+            
+            <div class="message warning">
+                <i class="fas fa-exclamation-circle"></i>
+                <div>يجب السماح للموقع بالوصول إلى الكاميرا لاستخدام ميزة المسح</div>
             </div>
-            <div class="nav-item" onclick="showScreen('history-screen')">
-                <i class="fas fa-history"></i>
-                <span>السجل</span>
+            
+            <div class="scanner-container">
+                <div class="scanner-overlay">
+                    <div class="scanner-frame"></div>
+                </div>
             </div>
-            <div class="nav-item" onclick="showScreen('scan-screen')">
-                <i class="fas fa-camera"></i>
-                <span>مسح</span>
+            
+            <div class="scanner-controls">
+                <button class="btn"><i class="fas fa-bolt"></i> فلاش</button>
+                <button class="btn btn-secondary">إلغاء</button>
             </div>
-            <div class="nav-item" onclick="showScreen('myqrs-screen')">
-                <i class="fas fa-qrcode"></i>
-                <span>رموزي</span>
+            
+            <div class="card" id="scan-result" style="display: none;">
+                <div class="card-header">
+                    <div class="card-title">نتيجة المسح</div>
+                    <div class="card-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <strong>الرابط:</strong> <span id="scanned-url">https://www.example.com</span>
+                </div>
+                
+                <button class="btn btn-block">فتح الرابط</button>
             </div>
-            <div class="nav-item" onclick="showScreen('settings-screen')">
-                <i class="fas fa-cog"></i>
-                <span>الإعدادات</span>
+        </div>
+        
+        <!-- صفحة رموزي -->
+        <div id="myqrs-page" class="page">
+            <h2 class="section-title"><i class="fas fa-qrcode"></i> رموز QR الخاصة بي</h2>
+            
+            <div class="form-group">
+                <input type="text" placeholder="ابحث في رموز QR...">
+            </div>
+            
+            <div class="qr-list">
+                <div class="qr-item">
+                    <div class="actions">
+                        <div class="action-btn"><i class="fas fa-star"></i></div>
+                        <div class="action-btn"><i class="fas fa-trash"></i></div>
+                    </div>
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%234361ee'/%3E%3C/svg%3E" alt="QR Code">
+                    <div class="title">موقع الشركة</div>
+                    <div class="date">١٢ مارس ٢٠٢٣</div>
+                </div>
+                
+                <div class="qr-item">
+                    <div class="actions">
+                        <div class="action-btn"><i class="fas fa-star"></i></div>
+                        <div class="action-btn"><i class="fas fa-trash"></i></div>
+                    </div>
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%234361ee'/%3E%3C/svg%3E" alt="QR Code">
+                    <div class="title">شبكة Wi-Fi المنزلية</div>
+                    <div class="date">٥ فبراير ٢٠٢٣</div>
+                </div>
+                
+                <div class="qr-item">
+                    <div class="actions">
+                        <div class="action-btn"><i class="fas fa-star"></i></div>
+                        <div class="action-btn"><i class="fas fa-trash"></i></div>
+                    </div>
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%234361ee'/%3E%3C/svg%3E" alt="QR Code">
+                    <div class="title">بطاقة التواصل</div>
+                    <div class="date">٢٠ يناير ٢٠٢٣</div>
+                </div>
+                
+                <div class="qr-item">
+                    <div class="actions">
+                        <div class="action-btn"><i class="fas fa-star"></i></div>
+                        <div class="action-btn"><i class="fas fa-trash"></i></div>
+                    </div>
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%234361ee'/%3E%3C/svg%3E" alt="QR Code">
+                    <div class="title">الموقع على الخريطة</div>
+                    <div class="date">١٥ يناير ٢٠٢٣</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- صفحة التاريخ والمفضلة -->
+        <div id="history-page" class="page">
+            <h2 class="section-title"><i class="fas fa-history"></i> التاريخ والمفضلة</h2>
+            
+            <div class="history-tabs">
+                <div class="tab active">المسح</div>
+                <div class="tab">الإنشاء</div>
+                <div class="tab">المفضلة</div>
+            </div>
+            
+            <div class="history-list">
+                <div class="history-item">
+                    <div class="history-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div class="history-content">
+                        <div class="history-title">موقع الشركة الرئيسي</div>
+                        <div class="history-date">مسح في ١٢ مارس ٢٠٢٣ - ١٠:٣٠ ص</div>
+                    </div>
+                    <div class="favorite-btn">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="history-icon">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <div class="history-content">
+                        <div class="history-title">شبكة المقهى</div>
+                        <div class="history-date">مسح في ١٠ مارس ٢٠٢٣ - ٠٢:١٥ م</div>
+                    </div>
+                    <div class="favorite-btn">
+                        <i class="far fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="history-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="history-content">
+                        <div class="history-title">مكالمة إلى الدعم</div>
+                        <div class="history-date">منشأ في ٨ مارس ٢٠٢٣ - ٠٩:٤٥ ص</div>
+                    </div>
+                    <div class="favorite-btn">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- صفحة الإعدادات -->
+        <div id="settings-page" class="page">
+            <h2 class="section-title"><i class="fas fa-cog"></i> الإعدادات</h2>
+            
+            <div class="settings-list">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <i class="fas fa-vibrate"></i>
+                        </div>
+                        <div class="setting-title">الاهتزاز عند المسح</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                        <div class="setting-title">فتح المواقع تلقائيًا</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="setting-title">حفظ التاريخ</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div class="setting-title">المساعدة والدعم</div>
+                    </div>
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <i class="fas fa-comment-dots"></i>
+                        </div>
+                        <div class="setting-title">إرسال ملاحظات</div>
+                    </div>
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                        <div class="setting-title">الاشتراكات والتسعير</div>
+                    </div>
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                        <div class="setting-title">حذف الحساب</div>
+                    </div>
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-icon">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </div>
+                        <div class="setting-title">تسجيل الخروج</div>
+                    </div>
+                    <i class="fas fa-chevron-left"></i>
+                </div>
             </div>
         </div>
     </div>
-
+    
+    <!-- شريط التنقل السفلي -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active" data-page="create-page">
+            <i class="fas fa-plus-circle"></i>
+            <span>إنشاء</span>
+        </a>
+        <a href="#" class="nav-item" data-page="history-page">
+            <i class="fas fa-history"></i>
+            <span>التاريخ</span>
+        </a>
+        <a href="#" class="nav-item" data-page="scan-page">
+            <i class="fas fa-camera"></i>
+            <span>مسح</span>
+        </a>
+        <a href="#" class="nav-item" data-page="myqrs-page">
+            <i class="fas fa-qrcode"></i>
+            <span>رموزي</span>
+        </a>
+        <a href="#" class="nav-item" data-page="settings-page">
+            <i class="fas fa-cog"></i>
+            <span>الإعدادات</span>
+        </a>
+    </div>
+    
     <script>
-        // إدارة التنقل بين الشاشات
-        function showScreen(screenId) {
-            // إخفاء جميع الشاشات
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
+        // تنقل بين الصفحات
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // إزالة الفعالية من جميع العناصر
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                
+                // إخفاء جميع الصفحات
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // إضافة الفعالية للعنصر الحالي
+                this.classList.add('active');
+                
+                // إظهار الصفحة المحددة
+                const pageId = this.getAttribute('data-page');
+                document.getElementById(pageId).classList.add('active');
             });
-            
-            // إظهار الشاشة المطلوبة
-            document.getElementById(screenId).classList.add('active');
-            
-            // تحديث التنقل السفلي
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // تحديث العنصر النشط في التنقل السفلي
-            if(screenId === 'create-type-screen' || screenId === 'create-qr-screen') {
-                document.querySelectorAll('.nav-item')[0].classList.add('active');
-            } else if(screenId === 'history-screen') {
-                document.querySelectorAll('.nav-item')[1].classList.add('active');
-            } else if(screenId === 'scan-screen') {
-                document.querySelectorAll('.nav-item')[2].classList.add('active');
-            } else if(screenId === 'myqrs-screen') {
-                document.querySelectorAll('.nav-item')[3].classList.add('active');
-            } else if(screenId === 'settings-screen') {
-                document.querySelectorAll('.nav-item')[4].classList.add('active');
-            }
-        }
-        
-        // التبديل بين علامات التبويب
-        function switchTab(tabId) {
-            // تحديث علامات التبويب النشطة
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // تحديث محتوى علامات التبويب
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // تعيين علامة التبويب المحددة كنشطة
-            event.target.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-        }
-        
-        // الانتقال إلى شاشة إنشاء رمز الاستجابة السريعة مع تحديد النوع
-        function showCreateScreen(type) {
-            document.getElementById('create-title').innerHTML = 
-                `<i class="fas fa-qrcode"></i>إنشاء رمز استجابة سريعة: ${type}`;
-            
-            // تعيين نصوص العنصر النائب بناءً على النوع
-            const input = document.getElementById('qr-data-input');
-            if(type === 'رابط / URL') {
-                input.placeholder = "أدخل الرابط (مثال: https://example.com)";
-            } else if(type === 'نص') {
-                input.placeholder = "أدخل النص الذي تريد تشفيره";
-            } else if(type === 'Wi-Fi') {
-                input.placeholder = "أدخل اسم الشبكة وكلمة المرور";
-            } else {
-                input.placeholder = `أدخل محتوى ${type}`;
-            }
-            
-            // إخفاء معاينة QR إن وجدت
-            document.getElementById('qr-preview-container').innerHTML = '';
-            document.getElementById('qr-result').style.display = 'none';
-            
-            showScreen('create-qr-screen');
-        }
-        
-        // إنشاء رمز الاستجابة السريعة
-        function generateQR() {
-            const data = document.getElementById('qr-data-input').value;
-            if (!data) {
-                alert('الرجاء إدخال البيانات أولاً');
-                return;
-            }
-            
-            // إنشاء رمز الاستجابة السريعة
-            const container = document.getElementById('qr-preview-container');
-            container.innerHTML = '';
-            new QRCode(container, {
-                text: data,
-                width: 200,
-                height: 200,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-            
-            // إظهار خيارات النتيجة
-            document.getElementById('qr-result').style.display = 'block';
-        }
-        
-        // تحميل رمز الاستجابة السريعة
-        function downloadQR() {
-            const canvas = document.querySelector('#qr-preview-container canvas');
-            if (!canvas) {
-                alert('الرجاء إنشاء رمز الاستجابة السريعة أولاً');
-                return;
-            }
-            
-            const link = document.createElement('a');
-            link.download = 'meqr-qrcode.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }
-        
-        // حفظ رمز الاستجابة السريعة
-        function saveQR() {
-            alert('تم حفظ رمز الاستجابة السريعة في "رموزي" بنجاح!');
-            showScreen('myqrs-screen');
-        }
-        
-        // بدء مسح رمز الاستجابة السريعة
-        function startScan() {
-            // في بيئة حقيقية، سيتم الوصول إلى الكاميرا هنا
-            // هذا نموذج تجريبي بسيط
-            document.getElementById('scan-result').style.display = 'block';
-            document.getElementById('scanned-title').textContent = 'موقع MEQR الرسمي';
-            document.getElementById('scanned-content').textContent = 'https://me-qr.com';
-            
-            // محاكاة مسح ناجح
-            setTimeout(() => {
-                document.querySelector('.scanner-container').style.border = '3px solid #4cc9f0';
-            }, 1000);
-        }
-        
-        // إيقاف المسح
-        function stopScan() {
-            document.querySelector('.scanner-container').style.border = 'none';
-            document.getElementById('scan-result').style.display = 'none';
-        }
-        
-        // فتح المحتوى الممسوح
-        function openScannedContent() {
-            alert('سيتم فتح https://me-qr.com في علامة تبويب جديدة');
-            window.open('https://me-qr.com', '_blank');
-        }
-        
-        // إضافة إلى المفضلة
-        function saveToFavorites() {
-            alert('تمت إضافة الرمز الممسوح إلى المفضلة!');
-        }
-        
-        // عند التحميل، إظهار الشاشة الترحيبية
-        document.addEventListener('DOMContentLoaded', function() {
-            showScreen('welcome-screen');
-            
-            // إنشاء جسيمات متحركة في الخلفية
-            createParticles();
         });
         
-        // إنشاء جسيمات متحركة
-        function createParticles() {
-            const container = document.createElement('div');
-            container.id = 'particles-js';
-            document.body.prepend(container);
-            
-            // محاكاة بسيطة للجسيمات
-            for (let i = 0; i < 100; i++) {
-                const particle = document.createElement('div');
-                particle.style.position = 'absolute';
-                particle.style.width = Math.random() * 5 + 2 + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.background = `rgba(${Math.floor(Math.random() * 100 + 156)}, 
-                                            ${Math.floor(Math.random() * 100 + 56)}, 
-                                            ${Math.floor(Math.random() * 200 + 55)}, 
-                                            ${Math.random() * 0.5 + 0.1})`;
-                particle.style.borderRadius = '50%';
-                particle.style.top = Math.random() * 100 + 'vh';
-                particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.zIndex = '1';
-                container.appendChild(particle);
-                
-                // تحريك الجسيمات
-                animateParticle(particle);
-            }
-        }
+        // تغيير نوع QR
+        document.querySelectorAll('.qr-type').forEach(type => {
+            type.addEventListener('click', function() {
+                document.querySelectorAll('.qr-type').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
         
-        // تحريك الجسيمات
-        function animateParticle(element) {
-            let x = parseFloat(element.style.left);
-            let y = parseFloat(element.style.top);
-            let dx = (Math.random() - 0.5) * 0.5;
-            let dy = (Math.random() - 0.5) * 0.5;
+        // إنشاء رمز QR
+        document.getElementById('generate-btn').addEventListener('click', function() {
+            const content = document.getElementById('qr-content').value;
             
-            function move() {
-                x += dx;
-                y += dy;
+            if(content) {
+                // مسح أي رمز سابق
+                document.getElementById('qrcode').innerHTML = '';
                 
-                if (x < 0 || x > window.innerWidth) dx *= -1;
-                if (y < 0 || y > window.innerHeight) dy *= -1;
+                // إنشاء رمز جديد
+                new QRCode(document.getElementById('qrcode'), {
+                    text: content,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#4361ee",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
                 
-                element.style.left = x + 'px';
-                element.style.top = y + 'px';
+                // إظهار النتيجة
+                document.getElementById('qr-result').style.display = 'block';
                 
-                requestAnimationFrame(move);
+                // تمرير إلى الأعلى
+                document.getElementById('qr-result').scrollIntoView({behavior: 'smooth'});
+            } else {
+                alert('الرجاء إدخال محتوى للرمز');
             }
-            
-            move();
-        }
+        });
+        
+        // محاكاة المسح
+        document.querySelectorAll('.nav-item[data-page="scan-page"]').forEach(item => {
+            item.addEventListener('click', function() {
+                // محاكاة تأخير المسح
+                setTimeout(function() {
+                    document.getElementById('scan-result').style.display = 'block';
+                }, 2000);
+            });
+        });
+        
+        // تبديل المفضلة
+        document.querySelectorAll('.favorite-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                if(icon.classList.contains('far')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                }
+            });
+        });
     </script>
 </body>
 </html>
